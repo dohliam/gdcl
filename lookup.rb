@@ -34,10 +34,8 @@ temp_dir = "#{Dir.home}/.goldendict/gdcl/tmp"
 # search_term = /^#{kword}$/	# searches for strictly matching headwords
 
 # optionally exlude the following dictionaries
-del_dict = ["kfcd-lijuyue.dsl","wenji_liju.dsl",""]
-# dir.delete("tmp/yue/kfcd-lijuyue.dsl")
-# dir.delete("tmp/yue/wenji_liju.dsl")
-# dir.delete("tmp/eo/tatoeba_eoen.dsl")
+del_dict = [""]
+# del_dict = ["somedict.dsl","someotherdict.dsl",""]
 
 # dsl markup options
 # remove markup (i.e. all text between "[]" tags); default is to remove markup
