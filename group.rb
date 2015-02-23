@@ -9,7 +9,7 @@ script_home = "#{Dir.home}/.goldendict/gdcl/"
 
 avail_groups = ""
 avail_groups_fullpath = Dir[dict_home]
-avail_groups_fullpath.each { |g| avail_groups << "[#{g.gsub(dict_home.gsub(/\*/,""),"")}] " }
+avail_groups_fullpath.sort.each { |g| avail_groups << "[#{g.gsub(dict_home.gsub(/\*/,""),"")}] " }
 
 puts "Enter the name of a dictionary group to configure"
 puts "Available groups:"
