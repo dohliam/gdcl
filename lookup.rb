@@ -87,7 +87,7 @@ while quitapp != true
 
   search_term = /^#{kword}/
 
-  dir.each do |dict|
+  dir.sort.each do |dict|
 #     dict_name = dict.gsub("tmp/#{group}/","").gsub(".dsl","").gsub("_"," ").gsub(/^(.)/){$1.upcase}
     dict_name = File.open(dict,"rb:UTF-16LE").readlines[0].strip.sub("\xEF\xBB\xBF", "").gsub(/#NAME\s+"(.*)"/,"\\1")
     dict_header = "== " + dict_name + " ==\n"
