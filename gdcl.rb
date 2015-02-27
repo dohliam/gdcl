@@ -50,7 +50,7 @@ markup_replace = ""
 avail_group = Dir.glob("#{temp_dir}/*").select {|f| File.directory? f}
 print_avail_group = ""
 
-avail_group.each do |dir|
+avail_group.sort.each do |dir|
   strip_path = dir.gsub(/.*\//, "")
   print_avail_group << "[#{strip_path}], "
 end
