@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby -KuU
+#!/usr/bin/ruby -KuU
 # encoding: utf-8
 
 # invoke with:

@@ -1,4 +1,4 @@
-# /usr/bin/ruby
+#!/usr/bin/ruby -KuU
 # encoding: utf-8
 
 require 'fileutils'
