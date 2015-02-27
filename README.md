@@ -14,29 +14,28 @@ Currently, gdcl does not require an installation of Goldendict, as it simply sea
 
 Interactive search:
 
-  `ruby lookup.rb`
+  `ruby gdcl.rb`
 
 Non-interactive search:
 
-  `ruby lookup.rb [group] [keyword]`
+  `ruby gdcl.rb [group] [keyword]`
 
 See below for configuration and usage details.
 
 ### Setup and configuration
-#### group.rb
-The easiest way to set up dictionaries for use with gdcl is to use the group.rb script. By default this looks in the `.goldendict` directory located in the user's home folder, but it can be configured to use any 
-folder containing zipped dsl dictionaries (i.e.: files with the extension .dsl.dz).
+#### gdcg.rb
+The easiest way to set up dictionaries for use with gdcl is to use the gdcg.rb script, which can automatically configure groups of dictionaries for quick searching. By default this looks in the `.goldendict` directory located in the user's home folder, but it can be configured to use any folder containing zipped dsl dictionaries (i.e.: files with the extension .dsl.dz).
 
-If you use group.rb, it assumes that your dictionaries are located in a folder `dic` in your Goldendict directory, separated into subdirectories representing groups of dictionaries that you would like to search. For example, English dictionaries might be in a subfolder called `en`, French dictionaries in `fr`, and Chemistry dictionaries in a folder `chem`. Using gdcl allows you to search through these groups individually, similar to the way Goldendict does.
+If you use gdcg.rb, it assumes that your dictionaries are located in a folder `dic` in your Goldendict directory, separated into subdirectories representing groups of dictionaries that you would like to search. For example, English dictionaries might be in a subfolder called `en`, French dictionaries in `fr`, and Chemistry dictionaries in a folder `chem`. Using gdcl allows you to search through these groups individually, similar to the way Goldendict does.
 
-Alternatively, you can just point the lookup.rb script at any folder containing _unzipped_ dsl files and avoid the need to use group.rb altogether.
+Alternatively, you can just point the gdcl.rb script at any folder containing _unzipped_ dsl files and avoid the need to use gdcg.rb altogether.
 
-#### lookup.rb
-The script for actually searching through the dictionary is called lookup.rb.
+#### gdcl.rb
+The script for actually searching through the dictionary is called gdcl.rb.
 
 There are a number of configuration options at the beginning of the script which should be self-explanatory. These are listed below:
 
-* `group`: _Group name_ (either a subfolder of your Goldendict home directory setup by group.rb, or any arbitrary folder located [by default] in the script's `tmp` directory
+* `group`: _Group name_ (either a subfolder of your Goldendict home directory setup by gdcg.rb, or any arbitrary folder located [by default] in the script's `tmp` directory
 * `kword`: _Keyword to search for_ (use this to specify a keyword in the script; if not specified here, gdcl will search for a term provided either interactively or on the command line)
 * `interactive_search`: _Interactive search_ (Set to false for non-interactive search, e.g. to pipe or redirect the search results; defaults to false if a group and keyword are specified as command-line parameters)
 * `header_footer`: _Header and footer information_ (Set to false to turn off header and footer information, i.e.: dictionary name and number of hits for search term)
@@ -49,25 +48,25 @@ There are a number of configuration options at the beginning of the script which
 
 ### Searching
 
-By default, invoking gdcl with the command `ruby lookup.rb` will search interactively. Command prompts will ask you to specify a group of dictionaries to search in out of a list of available groups, and then a keyword to look for. Results will be displayed immediately to standard output.
+By default, invoking gdcl with the command `ruby gdcl.rb` will search interactively. Command prompts will ask you to specify a group of dictionaries to search in out of a list of available groups, and then a keyword to look for. Results will be displayed immediately to standard output.
 
 In interactive mode, after the search results have finished displaying, there is an option to view the results in a paging program (by default `less`). This is helpful if there are many results or if results exceed the terminal buffer size.
 
 Alternatively, you can use non-interactive mode to search and pipe results to a file or other programs. gdcl will default to interactive mode if a group and keyword are specified as command-line parameters:
 
-  `ruby lookup.rb [group] [keyword]`
+  `ruby gdcl.rb [group] [keyword]`
 
 For example, if you want to search for the term _aardvark_ in the _en_ dictionary group, you can use:
 
-  `ruby lookup.rb en aardvark`
+  `ruby gdcl.rb en aardvark`
 
 As always, it is a good practice to quote or escape search strings, and this is mandatory for terms that contain e.g. spaces:
 
-  `ruby lookup.rb en "monkey wrench"`
+  `ruby gdcl.rb en "monkey wrench"`
 
 To pipe dictionary search results to a file:
 
-  `ruby lookup.rb en "monkey wrench" > output.txt`
+  `ruby gdcl.rb en "monkey wrench" > output.txt`
 
 
 ## To do
