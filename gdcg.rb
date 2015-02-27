@@ -3,6 +3,12 @@
 
 require 'fileutils'
 
+# Run this script to set up your dictionaries in groups for quicker searching.
+# By default it looks for groups of dictionaries arranged in subfolders under your Goldendict folder.
+# NOTE: Using this script is optional: it merely simplifies the process of creating dictionary groups.
+# You can configure gdcl to use any arbitrary group of dictionaries by changing the default directory in the configuration options.
+# To search, use gdcl.rb rather than this script.
+
 # config
 dict_home = "#{Dir.home}/.goldendict/dic/*"
 script_home = "#{Dir.home}/.goldendict/gdcl/"
