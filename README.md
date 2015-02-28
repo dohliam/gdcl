@@ -2,7 +2,7 @@
 
 gdcl is a command-line interface for searching [GoldenDict](https://github.com/goldendict/goldendict) dictionaries. A request for a command-line version is currently [the third most commented issue](https://github.com/goldendict/goldendict/issues/37) on the GoldenDict issue tracker. This script is a very rudimentary workaround to allow searching through groups of dictionaries until an official command-line interface is available.
 
-As an example of a similar interface, [Stardict](http://code.google.com/p/stardict-3/) has [sdcv](http://sdcv.sourceforge.net/) (Stardict Console Version), but it can only handle dictionaries in the Stardict format. For users of GoldenDict who have dictionaries in other formats (e.g. DSL or BGL), converting and maintaining two parallel sets of dictionaries is not a practical solution.
+As an example of a similar interface, [StarDict](http://code.google.com/p/stardict-3/) has [sdcv](http://sdcv.sourceforge.net/) (StarDict Console Version), but it can only handle dictionaries in the StarDict format. For users of GoldenDict who have dictionaries in other formats (e.g. DSL or BGL), converting and maintaining two parallel sets of dictionaries is not a practical solution.
 
 This script answers a practical need: namely the ability to search through groups of dsl format dictionaries from the command-line over ssh. The script can be used search dictionaries interactively, but also has an interactive mode which allows results from GoldenDict dictionaries to piped to standard output or used as part of a toolchain.
 
