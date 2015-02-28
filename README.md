@@ -1,12 +1,12 @@
-# gdcl - Goldendict command-line interface written in Ruby
+# gdcl - GoldenDict command-line interface written in Ruby
 
-gdcl is a command-line interface for searching [Goldendict](https://github.com/goldendict/goldendict) dictionaries. A request for a command-line version is currently [the third most commented issue](https://github.com/goldendict/goldendict/issues/37) on the Goldendict issue tracker. This script is a very rudimentary workaround to allow searching through groups of dictionaries until an official command-line interface is available.
+gdcl is a command-line interface for searching [GoldenDict](https://github.com/goldendict/goldendict) dictionaries. A request for a command-line version is currently [the third most commented issue](https://github.com/goldendict/goldendict/issues/37) on the GoldenDict issue tracker. This script is a very rudimentary workaround to allow searching through groups of dictionaries until an official command-line interface is available.
 
-As an example of a similar interface, [Stardict](http://code.google.com/p/stardict-3/) has [sdcv](http://sdcv.sourceforge.net/) (Stardict Console Version), but it can only handle dictionaries in the Stardict format. For users of Goldendict who have dictionaries in other formats (e.g. DSL or BGL), converting and maintaining two parallel sets of dictionaries is not a practical solution.
+As an example of a similar interface, [StarDict](http://code.google.com/p/stardict-3/) has [sdcv](http://sdcv.sourceforge.net/) (StarDict Console Version), but it can only handle dictionaries in the StarDict format. For users of GoldenDict who have dictionaries in other formats (e.g. DSL or BGL), converting and maintaining two parallel sets of dictionaries is not a practical solution.
 
-This script answers a practical need: namely the ability to search through groups of dsl format dictionaries from the command-line over ssh. The script can be used search dictionaries interactively, but also has an interactive mode which allows results from Goldendict dictionaries to piped to standard output or used as part of a toolchain.
+This script answers a practical need: namely the ability to search through groups of dsl format dictionaries from the command-line over ssh. The script can be used search dictionaries interactively, but also has an interactive mode which allows results from GoldenDict dictionaries to piped to standard output or used as part of a toolchain.
 
-Currently, gdcl does not require an installation of Goldendict, as it simply searches through predetermined groups of dictionaries in the Goldendict folder (which can be configured) and could conceivably be used to search through any collection of dsl format dictionaries. However, the eventual goal of the project is to read preferences from Goldendict's config file, support the full range of formats that Goldendict can use and, ideally, to use Goldendict's pre-made index files for faster searching.
+Currently, gdcl does not require an installation of GoldenDict, as it simply searches through predetermined groups of dictionaries in the GoldenDict folder (which can be configured) and could conceivably be used to search through any collection of dsl format dictionaries. However, the eventual goal of the project is to read preferences from GoldenDict's config file, support the full range of formats that GoldenDict can use and, ideally, to use GoldenDict's pre-made index files for faster searching.
 
 
 ## Usage
@@ -26,7 +26,7 @@ See below for configuration and usage details.
 #### gdcg.rb
 The easiest way to set up dictionaries for use with gdcl is to use the gdcg.rb script, which can automatically configure groups of dictionaries for quick searching. By default this looks in the `.goldendict` directory located in the user's home folder, but it can be configured to use any folder containing zipped dsl dictionaries (i.e.: files with the extension .dsl.dz).
 
-If you use gdcg.rb, it assumes that your dictionaries are located in a folder `dic` in your Goldendict directory, separated into subdirectories representing groups of dictionaries that you would like to search. For example, English dictionaries might be in a subfolder called `en`, French dictionaries in `fr`, and Chemistry dictionaries in a folder `chem`. Using gdcl allows you to search through these groups individually, similar to the way Goldendict does.
+If you use gdcg.rb, it assumes that your dictionaries are located in a folder `dic` in your GoldenDict directory, separated into subdirectories representing groups of dictionaries that you would like to search. For example, English dictionaries might be in a subfolder called `en`, French dictionaries in `fr`, and Chemistry dictionaries in a folder `chem`. Using gdcl allows you to search through these groups individually, similar to the way GoldenDict does.
 
 Alternatively, you can just point the gdcl.rb script at any folder containing _unzipped_ dsl files and avoid the need to use gdcg.rb altogether.
 
@@ -35,7 +35,7 @@ The script for actually searching through the dictionary is called gdcl.rb.
 
 There are a number of configuration options at the beginning of the script which should be self-explanatory. These are listed below:
 
-* `group`: _Group name_ (either a subfolder of your Goldendict home directory setup by gdcg.rb, or any arbitrary folder located [by default] in the script's `tmp` directory
+* `group`: _Group name_ (either a subfolder of your GoldenDict home directory setup by gdcg.rb, or any arbitrary folder located [by default] in the script's `tmp` directory
 * `kword`: _Keyword to search for_ (use this to specify a keyword in the script; if not specified here, gdcl will search for a term provided either interactively or on the command line)
 * `interactive_search`: _Interactive search_ (Set to false for non-interactive search, e.g. to pipe or redirect the search results; defaults to false if a group and keyword are specified as command-line parameters)
 * `header_footer`: _Header and footer information_ (Set to false to turn off header and footer information, i.e.: dictionary name and number of hits for search term)
@@ -72,8 +72,8 @@ To pipe dictionary search results to a file:
 ## To do
 
 Features that need to be implemented:
-* Read search and dictionary preferences from Goldendict config file
-* Search using Goldendict's existing index files
+* Read search and dictionary preferences from GoldenDict config file
+* Search using GoldenDict's existing index files
 * Dictzip support (i.e. search dictionaries in place rather than needing to unzip them to tmp folder)
 * bgl, dict and other formats support
 * Online dictionaries support (Wikipedia, Wiktionary etc)

@@ -2,17 +2,17 @@
 # encoding: utf-8
 
 # invoke with:
-# ruby lookup.rb
+# ruby gdcl.rb
 # (for interactive search)
 # OR
-# ruby lookup.rb [group] [keyword]
+# ruby gdcl.rb [group] [keyword]
 # (for non-interactive search)
 
 ########################
 
 # ==Configuration options==
 
-# Group name (at the moment this should be the name of a subfolder in your Goldendict dictionary directory)
+# Group name (at the moment this should be the name of a subfolder in your GoldenDict dictionary directory)
 group = ""
 
 # Keyword to search for
@@ -26,7 +26,7 @@ interactive_search = true
 header_footer = true
 
 # Temporary working directory where gdcl will store files
-# Note: if you used group.rb to set up your dsl files, you should probably use the default here
+# Note: if you used gdcg.rb to set up your dsl files, you should probably use the default here
 temp_dir = "#{Dir.home}/.goldendict/gdcl/tmp"
 
 # Search pattern (specify a pattern to search for, default is headwords starting with keyword; include regex between // slashes)
