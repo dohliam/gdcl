@@ -12,7 +12,7 @@
 
 # ==Configuration options==
 
-# Group name (at the moment this should be the name of a subfolder in your Goldendict dictionary directory)
+# Group name (at the moment this should be the name of a subfolder in your GoldenDict dictionary directory)
 group = ""
 
 # Keyword to search for
