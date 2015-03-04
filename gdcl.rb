@@ -96,17 +96,19 @@ while quitapp != true
     print dict_header
     counter = 0
     File.open(dict,"rb:UTF-16LE") do |file|
+      headword = ""
       file.each do |line|
         if line.match(/^\t/)
 	  line_strip = line.gsub(markup,markup_replace)
           if hit > 0
-            results << line_strip
-	    puts line_strip
+            results << line_strip.gsub("~", headword)
+	    puts line_strip.gsub("~", headword)
 	    hit +=1
           end
         elsif line.match(search_term)
           results << line
 	  puts line
+          headword = line.chomp
           hit = 1
 	  counter +=1
 	  total +=1
