@@ -21,6 +21,10 @@ puts "Enter the name of a dictionary group to configure"
 puts "Available groups:"
 puts avail_groups
 group = gets.chomp
+
+if group == "" then abort("No group specified") end
+if !avail_groups.include?(group) then abort("Specified group does not exist") end
+
 tmp_dir = script_home + "tmp/" + group
 
 FileUtils.mkdir_p tmp_dir
