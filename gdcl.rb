@@ -15,6 +15,10 @@
 # Group name (at the moment this should be the name of a subfolder in your GoldenDict dictionary directory)
 group = ""
 
+# Default group
+# Set this if you want gdcl to search a particular group of dictionaries by default when no group is specified either interactively or on the command-line
+default_group = ""
+
 # Keyword to search for
 kword = ""
 
@@ -65,6 +69,16 @@ if group == ""
   puts "  " + print_avail_group.gsub(/, $/,"")
   group = gets.chomp
 end
+
+if group == ""
+  if default_group != ""
+    group = default_group
+  else
+    abort("No group specified")
+  end
+end
+
+if !avail_group.include?(temp_dir + "/" + group) then abort("Specified group does not exist") end
 
 # working directory location
 dir = Dir[temp_dir + "/" + group + "/*.dsl"]
@@ -137,15 +151,15 @@ while quitapp != true
 
   if interactive_search == true
     puts "Display results in pager? (y/n)"
-  
+
     gets.chomp == "y" ? IO.popen("less", "w") { |f| f.puts results } : (puts "Search complete.")
-  
+
 #     IO.popen("less", "w") { |f| f.puts results }
 
     puts "\nSearch again in [#{group}] or enter 'q' to quit, or 'g' to change group:"
 
     kword = gets.chomp
-    kword == "q" ? quitapp = true : quitapp = false
+    kword == "q" || kword == "" ? quitapp = true : quitapp = false
 
     if kword == "g"
       puts "Please select a new group to search in (current group is [#{group}])"
@@ -162,18 +176,3 @@ while quitapp != true
   end
 
 end
-
-# File.open("yue_teshu.dsl","rb:UTF-16LE") do |file|
-#   file.each do |line|
-# #     puts line
-#     if line.match("\t")
-#       if hit == "yes"
-#         puts line
-#         hit = ""
-#       end
-#     elsif line.match("0既")
-#       puts line
-#       hit = "yes"
-#     end
-#   end
-# end
