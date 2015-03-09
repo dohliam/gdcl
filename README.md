@@ -24,16 +24,18 @@ See below for configuration and usage details.
 
 ### Setup and configuration
 #### gdcg.rb
-The easiest way to set up dictionaries for use with gdcl is to use the gdcg.rb script, which can automatically configure groups of dictionaries for quick searching. By default this looks in the `.goldendict` directory located in the user's home folder, but it can be configured to use any folder containing zipped dsl dictionaries (i.e.: files with the extension .dsl.dz).
+The easiest way to set up dictionaries for use with gdcl is to use the **gdcg.rb** script, which can automatically configure groups of dictionaries for quick searching. By default this looks in the `.goldendict` directory located in the user's home folder, but it can be configured to use any folder containing zipped dsl dictionaries (i.e.: files with the extension .dsl.dz).
 
 If you use gdcg.rb, it assumes that your dictionaries are located in a folder `dic` in your GoldenDict directory, separated into subdirectories representing groups of dictionaries that you would like to search. For example, English dictionaries might be in a subfolder called `en`, French dictionaries in `fr`, and Chemistry dictionaries in a folder `chem`. Using gdcl allows you to search through these groups individually, similar to the way GoldenDict does.
 
 Alternatively, you can just point the gdcl.rb script at any folder containing _unzipped_ dsl files and avoid the need to use gdcg.rb altogether.
 
 #### gdcl.rb
-The script for actually searching through the dictionary is called gdcl.rb.
+The script for actually searching through the dictionary is called **gdcl.rb**.
 
-There are a number of configuration options at the beginning of the script which should be self-explanatory. These are listed below:
+There are a number of configuration options available in the `config.yml` file. By default, this file should be installed in the standard config folder under the user's home directory (i.e., in the folder `~/.config/gdcl`). If gdcl can't find the file `config.yml` in that folder, it will look for it in the current working directory (i.e., wherever you have called the script from).
+
+The options available in config.xml are commented and should be self-explanatory. They are listed below for reference:
 
 * `group`: _Group name_ (either a subfolder of your GoldenDict home directory setup by gdcg.rb, or any arbitrary folder located [by default] in the script's `tmp` directory
 * `kword`: _Keyword to search for_ (use this to specify a keyword in the script; if not specified here, gdcl will search for a term provided either interactively or on the command line)

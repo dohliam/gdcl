@@ -10,55 +10,46 @@
 
 ########################
 
-# ==Configuration options==
+require 'yaml'
 
-# Group name (at the moment this should be the name of a subfolder in your GoldenDict dictionary directory)
-group = ""
+config_dir = Dir.home + "/.config/gdcl/"
 
-# Default group
-# Set this if you want gdcl to search a particular group of dictionaries by default when no group is specified either interactively or on the command-line
-default_group = ""
+# read config file from default directory or cwd, otherwise quit
+if File.exist?(config_dir + "config.yml")
+  config = YAML::load(File.read(config_dir + "config.yml"))
+elsif File.exist?("config.yml")
+  config = YAML::load(File.read("config.yml"))
+else
+  abort("        No configuration file found. Please make sure config.yml is located
+        either in the config folder under your home directory (i.e.,
+        ~/.config/gdcl/config.yml), or in the same directory as the gdcl.rb
+        executable.")
+end
 
-# Keyword to search for
-kword = ""
+# set defaults from config
+group = config[:group]
+default_group = config[:default_group]
+kword = config[:kword]
+interactive_search = config[:interactive_search]
+header_footer = config[:header_footer]
+temp_dir = config[:temp_dir].gsub(/^~/, Dir.home)
+search_term = config[:search_term]
+del_dict = config[:del_dict]
+markup = config[:markup]
+markup_replace = config[:markup_replace]
 
-# Set to false for non-interactive search (e.g. to pipe the search results)
-# Defaults to non-interactive search if group and keyword are specified as command-line parameters
-interactive_search = true
-
-# Set to false to turn off header and footer information (i.e. dictionary name, number of hits for search term)
-header_footer = true
-
-# Temporary working directory where gdcl will store files
-# Note: if you used gdcg.rb to set up your dsl files, you should probably use the default here
-temp_dir = "#{Dir.home}/.goldendict/gdcl/tmp"
-
-# Search pattern (specify a pattern to search for, default is headwords starting with keyword; include regex between // slashes)
-# search_term = /^#{kword}/
-# search_term = /^#{kword}$/	# searches for strictly matching headwords
-
-# optionally exlude the following dictionaries
-del_dict = [""]
-# del_dict = ["somedict.dsl","someotherdict.dsl",""]
-
-# dsl markup options
-# remove markup (i.e. all text between "[]" tags); default is to remove markup
-markup = /\[.*?\]/	# remove dsl markup
-# markup = ""	# uncomment to allow dsl markup in entries
-markup_replace = ""
-
-
-#######################
 
 # list available groups
 avail_group = Dir.glob("#{temp_dir}/*").select {|f| File.directory? f}
 print_avail_group = ""
 
+# make a nice bracketed list of available groups
 avail_group.sort.each do |dir|
   strip_path = dir.gsub(/.*\//, "")
   print_avail_group << "[#{strip_path}], "
 end
 
+# either run search automatically with provided args, or use interactive mode
 if ARGV[0] then group = ARGV[0] end
 if ARGV[1] then kword = ARGV[1] end
 if ARGV[0] && ARGV[1] then interactive_search = false end
@@ -78,6 +69,7 @@ if group == ""
   end
 end
 
+# quit if user supplied a group that doesn't exist
 if !avail_group.include?(temp_dir + "/" + group) then abort("Specified group does not exist") end
 
 # working directory location
@@ -92,8 +84,10 @@ if kword == ""
   kword = gets.chomp
 end
 
+# keep running the search loop until this is true
 quitapp = false
 
+# main dictionary search loop
 while quitapp != true
   hit = 0
   results = ""
@@ -159,8 +153,11 @@ while quitapp != true
     puts "\nSearch again in [#{group}] or enter 'q' to quit, or 'g' to change group:"
 
     kword = gets.chomp
+
+# quit if user enters "q"
     kword == "q" || kword == "" ? quitapp = true : quitapp = false
 
+# switch group if user enters "g"
     if kword == "g"
       puts "Please select a new group to search in (current group is [#{group}])"
       group = gets.chomp

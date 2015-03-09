@@ -1,0 +1,52 @@
+# ==GoldenDict Command-Line Version (gdcl) Configuration File==
+#
+# By default, gdcl will look for this file in the config folder under the
+# user's home directory (~/.config/gdcl/). If it doesn't find a file named
+# config.yml in that directory, it will look for it in the current working
+# directory. If config.yml cannot be found in either of these two locations,
+# the program will abort with an error message explaining the situation.
+
+
+# ==Configuration options==
+
+# Group name (at the moment this should be the name of a subfolder in your 
+# GoldenDict dictionary directory)
+:group: ""
+
+# Default group
+# Set this if you want gdcl to search a particular group of dictionaries by
+# default when no group is specified either interactively or on the 
+# command-line
+:default_group: ""
+
+# Keyword to search for
+:kword: ""
+
+# Set to false for non-interactive search (e.g. to pipe the search results)
+# Defaults to non-interactive search if group and keyword are specified as 
+# command-line parameters
+:interactive_search: true
+
+# Set to false to turn off header and footer information (i.e. dictionary 
+# name, number of hits for search term)
+:header_footer: true
+
+# Temporary working directory where gdcl will store files
+# Note: if you used gdcg.rb to set up your dsl files, you should probably use 
+# the default here
+:temp_dir: "~/.goldendict/gdcl/tmp"
+
+# Search pattern (specify a pattern to search for, default is headwords 
+# starting with keyword; include regex between // slashes)
+# :search_term: /^#{kword}/
+# :search_term: /^#{kword}$/    # searches for strictly matching headwords
+
+# optionally exlude the following dictionaries
+:del_dict: [""]
+# :del_dict: ["somedict.dsl","someotherdict.dsl",""]
+
+# dsl markup options
+# remove markup (i.e. all text between "[]" tags); default is to remove markup
+:markup: /\[.*?\]/      # remove dsl markup
+# :markup: ""   # example: uncomment to allow dsl markup in entries
+:markup_replace: = ""
