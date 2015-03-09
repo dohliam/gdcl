@@ -35,7 +35,7 @@ The script for actually searching through the dictionary is called **gdcl.rb**.
 
 There are a number of configuration options available in the `config.yml` file. By default, this file should be installed in the standard config folder under the user's home directory (i.e., in the folder `~/.config/gdcl`). If gdcl can't find the file `config.yml` in that folder, it will look for it in the current working directory (i.e., wherever you have called the script from).
 
-The options available in config.xml are commented and should be self-explanatory. They are listed below for reference:
+The options available in config.yml are commented and should be self-explanatory. They are listed below for reference:
 
 * `group`: _Group name_ (either a subfolder of your GoldenDict home directory setup by gdcg.rb, or any arbitrary folder located [by default] in the script's `tmp` directory
 * `kword`: _Keyword to search for_ (use this to specify a keyword in the script; if not specified here, gdcl will search for a term provided either interactively or on the command line)
