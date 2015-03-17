@@ -11,14 +11,23 @@
 ########################
 
 require 'yaml'
+require 'fileutils'
 
 config_dir = Dir.home + "/.config/gdcl/"
+xdg = "/etc/xdg/gdcl/"
+script_dir = File.expand_path(File.dirname(__FILE__)) + "/"
 
 # read config file from default directory or cwd, otherwise quit
 if File.exist?(config_dir + "config.yml")
   config = YAML::load(File.read(config_dir + "config.yml"))
-elsif File.exist?("config.yml")
-  config = YAML::load(File.read("config.yml"))
+elsif File.exist?(xdg + "config.yml")
+  config = YAML::load(File.read(xdg + "config.yml"))
+  FileUtils.mkdir_p config_dir
+  FileUtils.cp xdg + "config.yml", config_dir
+elsif File.exist?(script_dir + "config.yml")
+  config = YAML::load(File.read(script_dir + "config.yml"))
+  FileUtils.mkdir_p config_dir
+  FileUtils.cp script_dir + "config.yml", config_dir
 else
   abort("        No configuration file found. Please make sure config.yml is located
         either in the config folder under your home directory (i.e.,
@@ -35,7 +44,7 @@ header_footer = config[:header_footer]
 temp_dir = config[:temp_dir].gsub(/^~/, Dir.home)
 search_term = config[:search_term]
 del_dict = config[:del_dict]
-markup = config[:markup]
+markup = /#{config[:markup]}/
 markup_replace = config[:markup_replace]
 
 

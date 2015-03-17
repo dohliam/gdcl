@@ -47,6 +47,6 @@
 
 # dsl markup options
 # remove markup (i.e. all text between "[]" tags); default is to remove markup
-:markup: /\[.*?\]/      # remove dsl markup
+:markup: '\[.*?\]'      # remove dsl markup
 # :markup: ""   # example: uncomment to allow dsl markup in entries
-:markup_replace: = ""
+:markup_replace: ""

@@ -33,7 +33,9 @@ Alternatively, you can just point the gdcl.rb script at any folder containing _u
 #### gdcl.rb
 The script for actually searching through the dictionary is called **gdcl.rb**.
 
-There are a number of configuration options available in the `config.yml` file. By default, this file should be installed in the standard config folder under the user's home directory (i.e., in the folder `~/.config/gdcl`). If gdcl can't find the file `config.yml` in that folder, it will look for it in the current working directory (i.e., wherever you have called the script from).
+There are a number of configuration options available in the `config.yml` file. By default, this file should be installed in the standard config folder under the user's home directory (i.e., in the folder `~/.config/gdcl`). If gdcl can't find the file `config.yml` in that folder, it will look for it in $XDG_CONFIG_DIRS (i.e., `/etc/xdg/gdcl`), and failing that, the script folder (i.e., the same directory as the script executable).
+
+If you have a copy of `config.yml` in your xdg config directory or somewhere else (e.g., if you installed gdcl through a package manager), you should avoid editing that file as it will be overwritten when upgrading the package. Instead, you should make changes to a separate configuration file in your home directory (`~/.config/gdcl/config.yml`) which will take precedence over files in other locations. The `~/.config/gdcl` folder and default `config.yml` file will be created if they do not already exist when you first run gdcl.
 
 The options available in config.yml are commented and should be self-explanatory. They are listed below for reference:
 
