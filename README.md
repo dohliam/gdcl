@@ -9,6 +9,10 @@ This script answers a practical need: namely the ability to search through group
 Currently, gdcl does not require an installation of GoldenDict, as it simply searches through predetermined groups of dictionaries in the GoldenDict folder (which can be configured) and could conceivably be used to search through any collection of dsl format dictionaries. However, the eventual goal of the project is to read preferences from GoldenDict's config file, support the full range of formats that GoldenDict can use and, ideally, to use GoldenDict's pre-made index files for faster searching.
 
 
+## Installation from Distro Packages
+### User Packaged
+* ![logo](http://www.monitorix.org/imgs/archlinux.png "arch logo")Arch Linux: in the [AUR](https://aur.archlinux.org/packages/gdcl) and [Firef0x's Arch Linux Repository](http://firef0x.github.io/archrepo.html).
+
 ## Usage
 ### Summary
 
