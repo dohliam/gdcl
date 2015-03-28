@@ -51,6 +51,6 @@ avail_dict = Dir[tmp_dir + "/*.dsl"]
 
 puts "  The following dictionaries are available in group [#{group}]:"
 
-avail_dict.each do |dsl|
+avail_dict.sort.each do |dsl|
   puts dsl.gsub(tmp_dir + "/","").gsub(".dsl","").gsub("_"," ").gsub(/^(.)/){$1.upcase}.gsub(/(\s+.)/){$1.upcase}
 end
