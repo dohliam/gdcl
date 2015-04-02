@@ -12,6 +12,7 @@
 
 require 'yaml'
 require 'fileutils'
+require 'zlib'
 
 config_dir = Dir.home + "/.config/gdcl/"
 xdg = "/etc/xdg/gdcl/"
@@ -41,7 +42,7 @@ default_group = config[:default_group]
 kword = config[:kword]
 interactive_search = config[:interactive_search]
 header_footer = config[:header_footer]
-temp_dir = config[:temp_dir].gsub(/^~/, Dir.home)
+dict_dir = config[:dict_dir].gsub(/^~/, Dir.home)
 search_term = config[:search_term]
 del_dict = config[:del_dict]
 markup = /#{config[:markup]}/
@@ -49,7 +50,7 @@ markup_replace = config[:markup_replace]
 
 
 # list available groups
-avail_group = Dir.glob("#{temp_dir}/*").select {|f| File.directory? f}
+avail_group = Dir.glob(dict_dir + "*").select {|f| File.directory? f}
 print_avail_group = ""
 
 # make a nice bracketed list of available groups
@@ -79,13 +80,13 @@ if group == ""
 end
 
 # quit if user supplied a group that doesn't exist
-if !avail_group.include?(temp_dir + "/" + group) then abort("Specified group does not exist") end
+if !avail_group.include?(dict_dir + group) then abort("Specified group does not exist") end
 
 # working directory location
-dir = Dir[temp_dir + "/" + group + "/*.dsl"]
+dir = Dir[dict_dir + "#{group}/**/*.dsl.dz"]
 
 # don't search any of the dictionaries specified for removal in config
-del_dict.each {|x| dir.delete(temp_dir + "/" + group + "/" + x)}
+del_dict.each {|x| dir.delete(dict_dir + group + "/" + x)}
 
 # get search term
 if kword == ""
@@ -105,16 +106,15 @@ while quitapp != true
   search_term = /^#{kword}/
 
   dir.sort.each do |dict|
-#     dict_name = dict.gsub("tmp/#{group}/","").gsub(".dsl","").gsub("_"," ").gsub(/^(.)/){$1.upcase}
-    dict_name = File.open(dict,"rb:UTF-16LE").readlines[0].strip.sub("\xEF\xBB\xBF", "").gsub(/#NAME\s+"(.*)"/,"\\1")
+    dict_name = Zlib::GzipReader.open(dict, :external_encoding => "UTF-16LE").read.each_line.first.strip.sub("\xEF\xBB\xBF", "").gsub(/#NAME\s+"(.*)"/,"\\1")
     dict_header = "== " + dict_name + " ==\n"
     if header_footer == false then dict_header = "" end
     results << dict_header
     print dict_header
     counter = 0
-    File.open(dict,"rb:UTF-16LE") do |file|
+    Zlib::GzipReader.open(dict, :external_encoding => "UTF-16LE") do |file|
       headword = ""
-      file.each do |line|
+      file.read.each_line do |line|
         if line.match(/^\t/)
 	  line_strip = line.gsub(markup,markup_replace)
           if hit > 0
@@ -169,9 +169,10 @@ while quitapp != true
 # switch group if user enters "g"
     if kword == "g"
       puts "Please select a new group to search in (current group is [#{group}])"
+      puts "  " + print_avail_group.gsub(/, $/,"")
       group = gets.chomp
-      dir = Dir[temp_dir + "/" + group + "/*.dsl"]	# change working directory location
-      del_dict.each {|x| dir.delete(temp_dir + "/" + group + "/" + x)}	    # remove specified dictionaries
+      dir = Dir[dict_dir + group + "/**/*.dsl.dz"]	# change working directory location
+      del_dict.each {|x| dir.delete(dict_dir + group + "/" + x)}	    # remove specified dictionaries
 
       puts "Now searching in group [#{group}]"
       puts "Please enter search term:"

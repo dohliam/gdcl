@@ -2,24 +2,25 @@
 
 gdcl is a command-line interface for searching [GoldenDict](https://github.com/goldendict/goldendict) dictionaries. A request for a command-line version is currently [the third most commented issue](https://github.com/goldendict/goldendict/issues/37) on the GoldenDict issue tracker. This script is a very rudimentary workaround to allow searching through groups of dictionaries until an official command-line interface is available.
 
-As an example of a similar interface, [StarDict](http://code.google.com/p/stardict-3/) has [sdcv](http://sdcv.sourceforge.net/) (StarDict Console Version), but it can only handle dictionaries in the StarDict format. For users of GoldenDict who have dictionaries in other formats (e.g. DSL or BGL), converting and maintaining two parallel sets of dictionaries is not a practical solution.
+As an example of a similar interface, [StarDict](http://code.google.com/p/stardict-3/) has [sdcv](http://sdcv.sourceforge.net/) (StarDict Console Version), but it can only handle dictionaries in the StarDict format. For users of GoldenDict who have large collections of dictionaries in other formats (e.g. DSL or BGL), converting and maintaining two parallel sets of dictionaries is not a practical solution.
 
-This script answers a practical need: namely the ability to search through groups of dsl format dictionaries from the command-line over ssh. The script can be used to search dictionaries interactively, but also has an interactive mode which allows results from GoldenDict dictionaries to be piped to standard output or used as part of a toolchain.
+This script answers a practical need: namely the ability to search through groups of dictionaries from the command-line over ssh. The script can be used to search dictionaries interactively, but also has a non-interactive mode which allows results from GoldenDict dictionaries to be piped to standard output or used as part of a toolchain.
 
-Currently, gdcl does not require an installation of GoldenDict, as it simply searches through predetermined groups of dictionaries in the GoldenDict folder (which can be configured) and could conceivably be used to search through any collection of dsl format dictionaries. However, the eventual goal of the project is to read preferences from GoldenDict's config file, support the full range of formats that GoldenDict can use and, ideally, to use GoldenDict's pre-made index files for faster searching.
+Currently, gdcl does not require an installation of GoldenDict, as it simply searches through subdirectories of existing dictionaries in the GoldenDict folder (which can be configured) and could conceivably be used to search through any collection of dictionaries in DSL format. However, the eventual goal of the project is to read preferences from GoldenDict's config file, support the full range of formats that GoldenDict can use and, ideally, to use GoldenDict's pre-made index files for faster searching.
 
 
 * [1.1 Installation from distro packages](#installation-from-distro-packages)
   * [1.1.1 User packaged](#user-packaged)
-* [1.2 Usage](#usage)
-  * [1.2.1 Summary](#summary)
-  * [1.2.2 Setup and configuration](#setup-and-configuration)
-    * [1.2.2.1 gdcg.rb](#gdcgrb)
-    * [1.2.2.2 gdcl.rb](#gdclrb)
-    * [1.2.2.3 forvo.rb](#forvorb)
-  * [1.2.3 Searching](#searching)
-* [1.3 To do](#to-do)
-* [1.4 License](#license)
+* [2.1 Usage](#usage)
+  * [2.1.1 Summary](#summary)
+  * [2.1.2 Setup and configuration](#setup-and-configuration)
+    * [2.1.2.1 gdcg.rb (deprecated)](#gdcgrb-deprecated)
+    * [2.1.2.2 gdcl.rb](#gdclrb)
+    * [2.1.2.3 forvo.rb](#forvorb)
+  * [2.1.3 Searching](#searching)
+* [3.1 Supported formats](#supported-formats)
+* [4.1 To do](#to-do)
+* [5.1 License](#license)
 
 
 ## Installation
@@ -45,7 +46,9 @@ Non-interactive search:
 See below for configuration and usage details.
 
 ### Setup and configuration
-#### gdcg.rb
+#### gdcg.rb (deprecated)
+* __note: this helper script has been phased out since gdcl now reads compressed dictionaries directly from the GoldenDict folder - the information below is provided for users who may have installed a legacy version of gdcl through their package manager, and will be removed once all distro packages have been updated__
+
 The easiest way to set up dictionaries for use with gdcl is to use the **gdcg.rb** script, which can automatically configure groups of dictionaries for quick searching. By default this looks in the `.goldendict` directory located in the user's home folder, but it can be configured to use any folder containing zipped dsl dictionaries (i.e.: files with the extension .dsl.dz).
 
 If you use gdcg.rb, it assumes that your dictionaries are located in a folder `dic` in your GoldenDict directory, separated into subdirectories representing groups of dictionaries that you would like to search. For example, English dictionaries might be in a subfolder called `en`, French dictionaries in `fr`, and Chemistry dictionaries in a folder `chem`. Using gdcl allows you to search through these groups individually, similar to the way GoldenDict does.
@@ -144,12 +147,16 @@ To pipe dictionary search results to a file:
   `ruby gdcl.rb en "monkey wrench" > output.txt`
 
 
+## Supported formats
+
+gdcl currently supports compressed dictionary files in [ABBYY Lingvo .dsl dictionary format](http://lingvo.helpmax.net/en/troubleshooting/dsl-compiler/your-first-dsl-dictionary/) (i.e., files ending in the extension `.dsl.dz`) as well as online pronunciation audio files from Forvo.com (see [the section above](#forvorb) on using forvo.rb to look up pronunciations). Support for other formats and online dictionaries is planned for future releases.
+
 ## To do
 
 Features that need to be implemented:
 * Read search and dictionary preferences from GoldenDict config file
 * Search using GoldenDict's existing index files
-* Dictzip support (i.e. search dictionaries in place rather than needing to unzip them to tmp folder)
+* ~~Dictzip support (i.e. search dictionaries in place rather than needing to unzip them to tmp folder)~~
 * bgl, dict and other formats support
 * Online dictionaries support (Wikipedia, Wiktionary etc)
 

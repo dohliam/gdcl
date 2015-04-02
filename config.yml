@@ -1,13 +1,18 @@
 # ==GoldenDict Command-Line Version (gdcl) Configuration File==
 #
 # By default, gdcl will look for this file in the config folder under the
-# user's home directory (~/.config/gdcl/). If it doesn't find a file named
-# config.yml in that directory, it will look for it in the current working
-# directory. If config.yml cannot be found in either of these two locations,
-# the program will abort with an error message explaining the situation.
+# user's home directory (~/.config/gdcl/) or in the $XDG_CONFIG_DIRS 
+# (/etc/xdg/gdcl). If it can't find a file named config.yml in these default 
+# location, it will look for it in the current working directory. If 
+# config.yml cannot be found in any of the above locations, the program will 
+# abort with an error message explaining the situation.
 
 
 # ==Configuration options==
+
+# Location of GoldenDict dictionaries folder
+# Note: This can be set to any arbitrary location containing dictionary files
+:dict_dir: "~/.goldendict/dic/"
 
 # Group name (at the moment this should be the name of a subfolder in your 
 # GoldenDict dictionary directory)
@@ -30,11 +35,6 @@
 # Set to false to turn off header and footer information (i.e. dictionary 
 # name, number of hits for search term)
 :header_footer: true
-
-# Temporary working directory where gdcl will store files
-# Note: if you used gdcg.rb to set up your dsl files, you should probably use 
-# the default here
-:temp_dir: "~/.goldendict/gdcl/tmp"
 
 # Search pattern (specify a pattern to search for, default is headwords 
 # starting with keyword; include regex between // slashes)
