@@ -16,6 +16,7 @@ Currently, gdcl does not require an installation of GoldenDict, as it simply sea
   * [1.2.2 Setup and configuration](#setup-and-configuration)
     * [1.2.2.1 gdcg.rb](#gdcgrb)
     * [1.2.2.2 gdcl.rb](#gdclrb)
+    * [1.2.2.3 forvo.rb](#forvorb)
   * [1.2.3 Searching](#searching)
 * [1.3 To do](#to-do)
 * [1.4 License](#license)
@@ -67,6 +68,57 @@ The options available in config.yml are commented and should be self-explanatory
 * `del_dict`: _Excluded dictionaries_ (Optionally exlude the specified dictionaries from search results)
 * `markup`: _DSL Markup Options_ (Defaults to removing dsl dictionary markup in results; to display markup, comment out this line and uncomment the line `markup = ""`)
 * `markup_replace`: _DSL Markup Replacement String_ (Change this if you want to replace dsl markup with some other string)
+
+
+#### forvo.rb
+Looking up and playing back audio pronunciations from [Forvo](http://forvo.com/) is supported by gdcl using the `forvo.rb` script and mplayer. This requires registering for a [Forvo API key](http://api.forvo.com/), which is free for non-commercial educational use.
+
+Once you have a key, you just need to copy it into your gdcl config file in your user home directory (i.e. `~/.config/gdcl/config.yml`) under the section "forvo key". Uncomment the line `# :forvo_key: ""` and add your key between the quotation marks `""`. Now you can look up pronunciations by running `forvo.rb`.
+
+Similar to the main dictionary lookup, `forvo.rb` has both interactive and non-interactive modes. If run without any command-line arguments, it will prompt for a [language code](http://www.forvo.com/languages-codes/) and word to pronounce. You can find a full list of the supported codes [here](http://www.forvo.com/languages-codes/).
+
+You can skip the prompts by supplying the language code and word to be pronounced as arguments when running `forvo.rb`, in the form `ruby forvo.rb [lang_code] [word_to_be_pronounced]`. For example, if you wanted to find the pronounciation of the word "сегодня" in Russian, you would enter:
+
+`ruby forvo.rb ru сегодня`
+
+The last argument should probably be in quotes to avoid problems -- this also allows for pronunciation of phrases and other terms with spaces:
+
+`ruby forvo.rb sv "Johannes Robert Rydberg"`
+
+The script will let you know how many pronunciations were found and print out a numbered list (example below):
+
+* command: `ruby forvo.rb zh 发音`
+
+* output:
+```
+4 pronunciations found for "发音" in zh:
+
+  1. by Gliese (f from China)           0 [+1 -1]
+  2. by witenglish (m from China)       0 [+0 0]
+  3. by cloudrainner (m from China)     0 [+0 0]
+  4. by JuliaWu (f from China)          0 [+0 0]
+
+
+Select a number to hear the corresponding pronunciation, or press "a" to hear all available pronunciations.
+```
+
+To hear any of the listed pronunciations just enter the corresponding number and it will start playing automatically. If you press "a", all of the pronunciations will play in order. The numbers to the far right are the user rating that each pronunciation has received, in the format `rating [+upvotes -downvotes]`.
+
+The Forvo script also has a number of options that can be supplied at the command-line:
+
+* `-m`, `--mp3` (_Use mp3 format instead of ogg_)
+* `-l`, `--list` (_List all pronunciations_)
+* `-u`, `--urls` (_Print a list of audio urls_)
+* `-a`, `--play-all` (_Play back all pronunciations without interaction_)
+* `-s`, `--save` (_Save all audio files to disk_)
+
+Many of these options can be combined, for example:
+
+`ruby forvo.rb -lum en photogrammetry` (_Lookup the word "photogrammetry" and produce a list of pronunciations and urls in mp3 format_)
+
+If you want to skip all interaction entirely and just play each audio result automatically, use the `-a` option and supply the language code and lookup terms on the command-line, e.g.:
+
+`ruby forvo.rb -a fr prononciation`
 
 
 ### Searching

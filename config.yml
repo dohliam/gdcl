@@ -50,3 +50,7 @@
 :markup: '\[.*?\]'      # remove dsl markup
 # :markup: ""   # example: uncomment to allow dsl markup in entries
 :markup_replace: ""
+
+# forvo key
+# this key should be set in the user config file only
+# :forvo_key: ""
