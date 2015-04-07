@@ -152,12 +152,14 @@ while quitapp != true
   if header_footer == false then results_footer = "" end
   print results_footer
 
-  if interactive_search == true
+  if interactive_search == true && total != 0
     puts "Display results in pager? (y/n)"
 
     gets.chomp == "y" ? IO.popen("less", "w") { |f| f.puts results } : (puts "Search complete.")
 
 #     IO.popen("less", "w") { |f| f.puts results }
+  end
+  if interactive_search == true
 
     puts "\nSearch again in [#{group}] or enter 'q' to quit, or 'g' to change group:"
 
