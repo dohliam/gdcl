@@ -41,9 +41,12 @@
 # :search_term: /^#{kword}/
 # :search_term: /^#{kword}$/    # searches for strictly matching headwords
 
-# optionally exlude the following dictionaries
-:del_dict: [""]
-# :del_dict: ["somedict.dsl","someotherdict.dsl",""]
+# optionally exlude the following dictionaries, separated by commas 
+# (use original filename without dsl.dz extension)
+:del_dict: ""
+# e.g., to ignore two dictionaries called somedict.dsl.dz and 
+# someotherdict.dsl.dz, uncomment the following line:
+# :del_dict: "somedict","someotherdict"
 
 # dsl markup options
 # remove markup (i.e. all text between "[]" tags); default is to remove markup

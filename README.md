@@ -18,6 +18,7 @@ Currently, gdcl does not require an installation of GoldenDict, as it simply sea
     * [2.1.2.2 gdcl.rb](#gdclrb)
     * [2.1.2.3 forvo.rb](#forvorb)
   * [2.1.3 Searching](#searching)
+  * [2.1.4 Options](#options)
 * [3.1 Supported formats](#supported-formats)
 * [4.1 To do](#to-do)
 * [5.1 License](#license)
@@ -72,6 +73,7 @@ The options available in config.yml are commented and should be self-explanatory
 * `markup`: _DSL Markup Options_ (Defaults to removing dsl dictionary markup in results; to display markup, comment out this line and uncomment the line `markup = ""`)
 * `markup_replace`: _DSL Markup Replacement String_ (Change this if you want to replace dsl markup with some other string)
 
+See also the Options section for more details on how to specify some of these as command-line options.
 
 #### forvo.rb
 Looking up and playing back audio pronunciations from [Forvo](http://forvo.com/) is supported by gdcl using the `forvo.rb` script and mplayer. This requires registering for a [Forvo API key](http://api.forvo.com/), which is free for non-commercial educational use.
@@ -145,6 +147,23 @@ As always, it is a good practice to quote or escape search strings, and this is 
 To pipe dictionary search results to a file:
 
   `ruby gdcl.rb en "monkey wrench" > output.txt`
+
+### Options
+
+Most default options can be configured in the user's config.yml file (see [here](#gdclrb) for more details on setting up the config.yml file).
+
+There are also a number of settings that can be specified on the fly as command-line options. Use `ruby gdcl.rb -h` to print a list of all available command-line options. Currently, gdcl supports the following options:
+
+* `-d DIRECTORY`, `--dict-directory DIRECTORY` (_Directory in which to look for dictionaries_)
+* `-i FILENAMES`, `--ignore FILENAMES` (_List of dictionaries to ignore while searching_)
+* `-g`, `--groups (_Print a list of all available dictionary groups_)
+* `-l GROUP`, `--list GROUP (_List all dictionaries in specified group_)
+* `-n`, `--no-headers (_Remove headers and footers from results output_)
+* `-m`, `--markup (_Don't strip DSL markup from output_)
+
+Most of these can be combined, e.g.: `ruby gdcl.rb -nm -d /path/to/dictionaries` to search in `/path/to/dictionaries` and print out results with no headers or footers and without stripping DSL markup.
+
+Some options provide information that can be supplied to other options. For example, you can use `-g` to get a list of available groups, and then print out a list of all dictionaries in one of those groups using the `-l` option. The results of `-l` can, in turn, be used to specify a list of dictionaries to ignore with the `-i` option.
 
 
 ## Supported formats
