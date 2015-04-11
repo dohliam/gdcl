@@ -47,8 +47,9 @@ OptionParser.new do |opts|
   opts.on("-i", "--ignore FILENAMES", "List of dictionaries to ignore while searching") { |v| options[:ignore] = v }
   opts.on("-g", "--groups", "Print a list of all available dictionary groups") { options[:groups] = true }
   opts.on("-l", "--list GROUP", "List all dictionaries in specified group") { |v| options[:list] = v }
-  opts.on("-n", "--no-headers", "Remove headers and footers from results output") { options[:noheaders] = true }
   opts.on("-m", "--markup", "Don't strip DSL markup from output") { options[:markup] = true }
+  opts.on("-n", "--no-headers", "Remove headers and footers from results output") { options[:noheaders] = true }
+  opts.on("-r", "--restrict FILENAME", "Restrict search to the specified dictionary only") { |v| options[:restrict] = v }
 
 end.parse!
 
@@ -146,7 +147,18 @@ end
 if !avail_group.include?(dict_dir + group) then abort("Specified group does not exist") end
 
 # working directory location
-dir = Dir[dict_dir + "#{group}/**/*.dsl.dz"]
+if options[:restrict]
+  rlist = options[:restrict].split(",")
+  dir = []
+  full_list = Dir[dict_dir + "#{group}/**/*.dsl.dz"]
+  full_list.each do |f|
+    rlist.each { |r| if f.gsub(/.*\/(.*)\.dsl\.dz$/, "\\1").match(r) then dir.push(f) end }
+  end
+#   full_list.each { |f| if f.gsub(/.*\/(.*)\.dsl\.dz$/, "\\1").match(rlist[0]) then dir.push(f) end }
+#   rlist.each { |f| dir.push( dict_dir + group + "/" + f + ".dsl.dz") }
+else
+  dir = Dir[dict_dir + "#{group}/**/*.dsl.dz"]
+end
 
 # don't search any of the dictionaries specified for removal in config
 del_dict.each {|x| dir.delete(dict_dir + group + "/" + x + ".dsl.dz")}

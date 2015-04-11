@@ -19,6 +19,8 @@ Currently, gdcl does not require an installation of GoldenDict, as it simply sea
     * [2.1.2.3 gdcg.rb (deprecated)](#gdcgrb-deprecated)
   * [2.1.3 Searching](#searching)
   * [2.1.4 Options](#options)
+    * [2.1.4.1 Listing groups and dictionaries](#listing-groups-and-dictionaries)
+    * [2.1.4.2 Ignoring and restricting dictionaries](#ignoring-and-restricting-dictionaries)
 * [3.1 Supported formats](#supported-formats)
 * [4.1 To do](#to-do)
 * [5.1 License](#license)
@@ -124,10 +126,6 @@ Many of these options can be combined, for example:
 
 `ruby forvo.rb -lum en photogrammetry` (_Lookup the word "photogrammetry" and produce a list of pronunciations and urls in mp3 format_)
 
-To get a list of dictionary filenames mapped to canonical dictionary names (i.e., to the name specified in the first line of a DSL file), use the `-c` and `-l` options together. For example, if you have Russian dictionaries stored in a subfolder named `ru`, you can get such a list by using the following command:
-
-    ruby gdcl.rb -c -l ru
-
 If you want to skip all interaction entirely and just play each audio result automatically, use the `-a` option and supply the language code and lookup terms on the command-line, e.g.:
 
     ruby forvo.rb -a fr prononciation
@@ -172,15 +170,77 @@ There are also a number of settings that can be specified on the fly as command-
 
 * `-c GROUP`, `--names [GROUP]` (_List all dictionaries in specified group by canonical name_)
 * `-d DIRECTORY`, `--dict-directory DIRECTORY` (_Directory in which to look for dictionaries_)
-* `-i FILENAMES`, `--ignore FILENAMES` (_List of dictionaries to ignore while searching_)
 * `-g`, `--groups (_Print a list of all available dictionary groups_)
+* `-i FILENAMES`, `--ignore FILENAMES` (_List of dictionaries to ignore while searching_)
 * `-l GROUP`, `--list GROUP (_List all dictionaries in specified group by filename_)
-* `-n`, `--no-headers (_Remove headers and footers from results output_)
 * `-m`, `--markup (_Don't strip DSL markup from output_)
+* `-n`, `--no-headers (_Remove headers and footers from results output_)
+* `-r`, `--restrict FILENAMES (_Don't strip DSL markup from output_)
 
 Most of these can be combined, e.g.: `ruby gdcl.rb -nm -d /path/to/dictionaries` to search in `/path/to/dictionaries` and print out results with no headers or footers and without stripping DSL markup.
 
 Some options provide information that can be supplied to other options. For example, you can use `-g` to get a list of available groups, and then print out a list of all dictionaries in one of those groups using the `-l` option. The results of `-l` can, in turn, be used to specify a list of dictionaries to ignore with the `-i` option.
+
+An in-depth look at usage of some of these options is below.
+
+#### Listing groups and dictionaries
+
+The `-g` and `-l` options list all the groups and dictionaries within a group, respectively, that gdcl knows about. The group names are essentially the names of subfolders in your GoldenDict dictionaries folder (or whichever folder you have specified in `config.yml`).
+
+The dictionary names provided by `-l GROUP` are in fact the raw filenames (minus `*.dsl.dz` extension) of each of the dictionaries in `GROUP`. This is useful for accessing other command-line options that take dictionary names in this format, such as [restrict and ignore](ignoring-and-restricting-dictionaries).
+
+If you are more interested in the canonical name (i.e., the name specified in the first line of a DSL file) of dictionaries in a given group, you should use the `-c` option instead of `-l`.
+
+For example, let's say you have a Swedish dictionary contained in a file called `myswedishdictfile.dsl.dz`, located in a subfolder `sv`, and the first line of the DSL file looks like this:
+
+    #NAME "Fancy Swedish Dictionary - Min extraordinärt svenska ordbok"
+
+Calling `ruby gdcl.rb -l sv` will give the following output:
+
+    myswedishdictfile
+
+Whereas calling `ruby gdcl.rb -c sv` will output the full name:
+
+    Fancy Swedish Dictionary - Min extraordinärt svenska ordbok
+
+To get a list of dictionary filenames mapped to canonical dictionary names, you can use the `-c` and `-l` options together. Following the example above, you could use the following command to list filenames and canonical names of dictionaries in the `sv` folder:
+
+    ruby gdcl.rb -c -l sv
+
+And the resulting output would be:
+
+    myswedishdictfile	Fancy Swedish Dictionary - Min extraordinärt svenska ordbok
+
+(Note, if you are piping this output to another file, the two fields are separated by a tab space)
+
+#### Ignoring and restricting dictionaries
+
+You can ignore certain dictionaries in a group with `-i` or, conversely, restrict your search to a subset of dictionaries in a certain group with `-r`. For example, to ignore a dictionary called `jedict.dsl.dz` in the `jp` group, use:
+
+    ruby gdcl.rb -i jedict jp
+
+The dictionary you specified will be excluded from your search, and results from all other dictionaries in the group will be shown instead.
+
+If you want to _only_ show results from `jedict.dsl.dz`, you can use the following command:
+
+    ruby gdcl.rb -r jedict jp
+
+This can be really useful if you have groups with a large number of dictionaries (particularly collections of example sentences or encyclopedias), and you only want to do a quick lookup of a single term.
+
+Both of these options can take comma separated lists of dictionaries you want to ignore or restrict your search to, for example:
+
+    ruby gdcl.rb -r oed,longman,webster en
+    ruby gdcl.rb -i wikipedia,encyclopaedia_britannica,good_writing_guide en
+
+All dictionaries in the list will be included in the `--ignore` or `--restrict` parameters if they exist.
+
+**Tip:** When using `-r`, you can supply a partial filename to search only in the dictionary (or dictionaries) that match the given string. For example, if you have a dictionary called `supercooldict.dsl.dz`, you could search only in that dictionary by entering:
+
+    ruby gdcl.rb -r super
+
+On the other hand, if you have a _collection_ of dictionaries in group `es` called e.g., `collins_spanish-english.dsl.dz`, `collins_spanish-french.dsl.dz`, `collins_spanish-verbs.dsl.dz`, `collins_french-spanish.dsl.dz`, etc., you could restrict your search to only those dictionaries containing `collins` in the title by using the command:
+
+    ruby gdcl.rb -r collins es
 
 
 ## Supported formats
