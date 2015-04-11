@@ -42,6 +42,7 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: gdcl.rb [options] [dictionary group] [search term]"
 
+  opts.on("-c", "--names [GROUP]", "List all dictionaries in specified group by canonical name") { |v| v ? options[:dict_name] = v : options[:dict_name] = true }
   opts.on("-d", "--dict-directory DIRECTORY", "Directory in which to look for dictionaries") { |v| options[:dict_dir] = v }
   opts.on("-i", "--ignore FILENAMES", "List of dictionaries to ignore while searching") { |v| options[:ignore] = v }
   opts.on("-g", "--groups", "Print a list of all available dictionary groups") { options[:groups] = true }
@@ -83,8 +84,25 @@ markup_replace = config[:markup_replace]
 if options[:list]
   dir = Dir[dict_dir + "#{options[:list]}/**/*.dsl.dz"]
   dir.sort.each do |dict|
-    puts dict.gsub(/.*\/(.*)\.dsl\.dz$/, "\\1")
+    dict_file = dict.gsub(/.*\/(.*)\.dsl\.dz$/, "\\1")
+    if options[:dict_name]
+      dict_name = Zlib::GzipReader.open(dict, :external_encoding => "UTF-16LE").read.each_line.first.strip.sub("\xEF\xBB\xBF", "").gsub(/#NAME\s+"(.*)"/,"\\1")
+      puts dict_file + "\t" + dict_name
+    else
+      puts dict_file
+    end
   end
+  exit
+end
+
+# list dictionaries by name
+if options[:dict_name]
+  dir = Dir[dict_dir + "#{options[:dict_name]}/**/*.dsl.dz"]
+  dict_name = []
+  dir.sort.each do |dict|
+    dict_name.push(Zlib::GzipReader.open(dict, :external_encoding => "UTF-16LE").read.each_line.first.strip.sub("\xEF\xBB\xBF", "").gsub(/#NAME\s+"(.*)"/,"\\1"))
+  end
+  puts dict_name
   exit
 end
 

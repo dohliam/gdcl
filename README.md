@@ -121,6 +121,10 @@ Many of these options can be combined, for example:
 
 `ruby forvo.rb -lum en photogrammetry` (_Lookup the word "photogrammetry" and produce a list of pronunciations and urls in mp3 format_)
 
+To get a list of dictionary filenames mapped to canonical dictionary names (i.e., to the name specified in the first line of a DSL file), use the `-c` and `-l` options together. For example, if you have Russian dictionaries stored in a subfolder named `ru`, you can get such a list by using the following command:
+
+`ruby gdcl.rb -c -l ru`
+
 If you want to skip all interaction entirely and just play each audio result automatically, use the `-a` option and supply the language code and lookup terms on the command-line, e.g.:
 
 `ruby forvo.rb -a fr prononciation`
@@ -154,10 +158,11 @@ Most default options can be configured in the user's config.yml file (see [here]
 
 There are also a number of settings that can be specified on the fly as command-line options. Use `ruby gdcl.rb -h` to print a list of all available command-line options. Currently, gdcl supports the following options:
 
+* `-c GROUP`, `--names [GROUP]` (_List all dictionaries in specified group by canonical name_)
 * `-d DIRECTORY`, `--dict-directory DIRECTORY` (_Directory in which to look for dictionaries_)
 * `-i FILENAMES`, `--ignore FILENAMES` (_List of dictionaries to ignore while searching_)
 * `-g`, `--groups (_Print a list of all available dictionary groups_)
-* `-l GROUP`, `--list GROUP (_List all dictionaries in specified group_)
+* `-l GROUP`, `--list GROUP (_List all dictionaries in specified group by filename_)
 * `-n`, `--no-headers (_Remove headers and footers from results output_)
 * `-m`, `--markup (_Don't strip DSL markup from output_)
 
