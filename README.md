@@ -14,9 +14,9 @@ Currently, gdcl does not require an installation of GoldenDict, as it simply sea
 * [2.1 Usage](#usage)
   * [2.1.1 Summary](#summary)
   * [2.1.2 Setup and configuration](#setup-and-configuration)
-    * [2.1.2.1 gdcg.rb (deprecated)](#gdcgrb-deprecated)
-    * [2.1.2.2 gdcl.rb](#gdclrb)
-    * [2.1.2.3 forvo.rb](#forvorb)
+    * [2.1.2.1 gdcl.rb](#gdclrb)
+    * [2.1.2.2 forvo.rb](#forvorb)
+    * [2.1.2.3 gdcg.rb (deprecated)](#gdcgrb-deprecated)
   * [2.1.3 Searching](#searching)
   * [2.1.4 Options](#options)
 * [3.1 Supported formats](#supported-formats)
@@ -38,24 +38,26 @@ To install you can either download the project source and run the scripts direct
 
 Interactive search:
 
-  `ruby gdcl.rb`
+    ruby gdcl.rb
 
 Non-interactive search:
 
-  `ruby gdcl.rb [group] [keyword]`
+    ruby gdcl.rb [group] [keyword]
 
-See below for configuration and usage details.
+A group name can also be specified without a keyword, i.e.:
+
+    ruby gdcl.rb [group]
+
+This can be useful because it allows you to bind an alias to invoke the program and lookup words in specific groups. For example, you could bind `gf` to look up words in a subfolder of French dictionaryies called `fr`, and `gr` to search in Russian dictionaries (subfolder `ru`):
+
+    alias gf='ruby /path/to/gdcl.rb fr'
+    alias gr='ruby /path/to/gdcl.rb ru'
+
+This can be a good way of maintaining a large collection of dictionaries while still being able to search quickly and with minimal interaction.
+
+See below for further configuration and usage details.
 
 ### Setup and configuration
-#### gdcg.rb (deprecated)
-* __note: this helper script has been phased out since gdcl now reads compressed dictionaries directly from the GoldenDict folder - the information below is provided for users who may have installed a legacy version of gdcl through their package manager, and will be removed once all distro packages have been updated__
-
-The easiest way to set up dictionaries for use with gdcl is to use the **gdcg.rb** script, which can automatically configure groups of dictionaries for quick searching. By default this looks in the `.goldendict` directory located in the user's home folder, but it can be configured to use any folder containing zipped dsl dictionaries (i.e.: files with the extension .dsl.dz).
-
-If you use gdcg.rb, it assumes that your dictionaries are located in a folder `dic` in your GoldenDict directory, separated into subdirectories representing groups of dictionaries that you would like to search. For example, English dictionaries might be in a subfolder called `en`, French dictionaries in `fr`, and Chemistry dictionaries in a folder `chem`. Using gdcl allows you to search through these groups individually, similar to the way GoldenDict does.
-
-Alternatively, you can just point the gdcl.rb script at any folder containing _unzipped_ dsl files and avoid the need to use gdcg.rb altogether.
-
 #### gdcl.rb
 The script for actually searching through the dictionary is called **gdcl.rb**.
 
@@ -63,7 +65,8 @@ There are a number of configuration options available in the `config.yml` file. 
 
 The options available in config.yml are commented and should be self-explanatory. They are listed below for reference:
 
-* `group`: _Group name_ (either a subfolder of your GoldenDict home directory setup by gdcg.rb, or any arbitrary folder located [by default] in the script's `tmp` directory
+* `dict_dir`: _Dictionary folder_ (the location of your GoldenDict dictionaries folder; can be any folder, but set to `~/.goldendict/dic` by default)
+* `group`: _Group name_ (a subfolder of the directory specified in `dict_dir` above, containing a group of dictionaries to be searched together; default blank -- if you specify a value here, gdcl will never ask interactively for a group name, and will use the specified group by default)
 * `kword`: _Keyword to search for_ (use this to specify a keyword in the script; if not specified here, gdcl will search for a term provided either interactively or on the command line)
 * `interactive_search`: _Interactive search_ (Set to false for non-interactive search, e.g. to pipe or redirect the search results; defaults to false if a group and keyword are specified as command-line parameters)
 * `header_footer`: _Header and footer information_ (Set to false to turn off header and footer information, i.e.: dictionary name and number of hits for search term)
@@ -84,11 +87,11 @@ Similar to the main dictionary lookup, `forvo.rb` has both interactive and non-i
 
 You can skip the prompts by supplying the language code and word to be pronounced as arguments when running `forvo.rb`, in the form `ruby forvo.rb [lang_code] [word_to_be_pronounced]`. For example, if you wanted to find the pronounciation of the word "сегодня" in Russian, you would enter:
 
-`ruby forvo.rb ru сегодня`
+    ruby forvo.rb ru сегодня
 
 The last argument should probably be in quotes to avoid problems -- this also allows for pronunciation of phrases and other terms with spaces:
 
-`ruby forvo.rb sv "Johannes Robert Rydberg"`
+    ruby forvo.rb sv "Johannes Robert Rydberg"
 
 The script will let you know how many pronunciations were found and print out a numbered list (example below):
 
@@ -123,11 +126,11 @@ Many of these options can be combined, for example:
 
 To get a list of dictionary filenames mapped to canonical dictionary names (i.e., to the name specified in the first line of a DSL file), use the `-c` and `-l` options together. For example, if you have Russian dictionaries stored in a subfolder named `ru`, you can get such a list by using the following command:
 
-`ruby gdcl.rb -c -l ru`
+    ruby gdcl.rb -c -l ru
 
 If you want to skip all interaction entirely and just play each audio result automatically, use the `-a` option and supply the language code and lookup terms on the command-line, e.g.:
 
-`ruby forvo.rb -a fr prononciation`
+    ruby forvo.rb -a fr prononciation
 
 
 ### Searching
@@ -138,19 +141,28 @@ In interactive mode, after the search results have finished displaying, there is
 
 Alternatively, you can use non-interactive mode to search and pipe results to a file or other programs. gdcl will default to interactive mode if a group and keyword are specified as command-line parameters:
 
-  `ruby gdcl.rb [group] [keyword]`
+    ruby gdcl.rb [group] [keyword]
 
 For example, if you want to search for the term _aardvark_ in the _en_ dictionary group, you can use:
 
-  `ruby gdcl.rb en aardvark`
+    ruby gdcl.rb en aardvark
 
 As always, it is a good practice to quote or escape search strings, and this is mandatory for terms that contain e.g. spaces:
 
-  `ruby gdcl.rb en "monkey wrench"`
+    ruby gdcl.rb en "monkey wrench"
 
 To pipe dictionary search results to a file:
 
-  `ruby gdcl.rb en "monkey wrench" > output.txt`
+    ruby gdcl.rb en "monkey wrench" > output.txt
+
+#### gdcg.rb (deprecated)
+* __note: this helper script has been phased out since gdcl now reads compressed dictionaries directly from the GoldenDict folder -- the information below is provided for users who may have installed a legacy version of gdcl through their package manager, and will be removed once all distro packages have been updated__
+
+The easiest way to set up dictionaries for use with gdcl is to use the **gdcg.rb** script, which can automatically configure groups of dictionaries for quick searching. By default this looks in the `.goldendict` directory located in the user's home folder, but it can be configured to use any folder containing zipped dsl dictionaries (i.e.: files with the extension .dsl.dz).
+
+If you use gdcg.rb, it assumes that your dictionaries are located in a folder `dic` in your GoldenDict directory, separated into subdirectories representing groups of dictionaries that you would like to search. For example, English dictionaries might be in a subfolder called `en`, French dictionaries in `fr`, and Chemistry dictionaries in a folder `chem`. Using gdcl allows you to search through these groups individually, similar to the way GoldenDict does.
+
+Alternatively, you can just point the gdcl.rb script at any folder containing _unzipped_ dsl files and avoid the need to use gdcg.rb altogether.
 
 ### Options
 

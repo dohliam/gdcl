@@ -131,7 +131,7 @@ if ARGV[0] && ARGV[1] then interactive_search = false end
 if group == ""
   puts "  Please select a dictionary group to search from the following available groups:"
   puts "  " + print_avail_group.gsub(/, $/,"")
-  group = gets.chomp
+  group = $stdin.gets.chomp
 end
 
 if group == ""
@@ -154,7 +154,7 @@ del_dict.each {|x| dir.delete(dict_dir + group + "/" + x + ".dsl.dz")}
 # get search term
 if kword == ""
   puts "Enter a search term (currently searching in group [#{group}]):"
-  kword = gets.chomp
+  kword = $stdin.gets.chomp
 end
 
 # keep running the search loop until this is true
@@ -218,7 +218,7 @@ while quitapp != true
   if interactive_search == true && total != 0
     puts "Display results in pager? (y/n)"
 
-    gets.chomp == "y" ? IO.popen("less", "w") { |f| f.puts results } : (puts "Search complete.")
+    $stdin.gets.chomp == "y" ? IO.popen("less", "w") { |f| f.puts results } : (puts "Search complete.")
 
 #     IO.popen("less", "w") { |f| f.puts results }
   end
@@ -226,7 +226,7 @@ while quitapp != true
 
     puts "\nSearch again in [#{group}] or enter 'q' to quit, or 'g' to change group:"
 
-    kword = gets.chomp
+    kword = $stdin.gets.chomp
 
 # quit if user enters "q"
     kword == "q" || kword == "" ? quitapp = true : quitapp = false
@@ -235,13 +235,13 @@ while quitapp != true
     if kword == "g"
       puts "Please select a new group to search in (current group is [#{group}])"
       puts "  " + print_avail_group.gsub(/, $/,"")
-      group = gets.chomp
+      group = $stdin.gets.chomp
       dir = Dir[dict_dir + group + "/**/*.dsl.dz"]	# change working directory location
       del_dict.each {|x| dir.delete(dict_dir + group + "/" + x + ".dsl.dz")}	    # remove specified dictionaries
 
       puts "Now searching in group [#{group}]"
       puts "Please enter search term:"
-      kword = gets.chomp
+      kword = $stdin.gets.chomp
     end
   else
     quitapp = true
