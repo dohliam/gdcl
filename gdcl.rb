@@ -49,6 +49,7 @@ OptionParser.new do |opts|
   opts.on("-l", "--list GROUP", "List all dictionaries in specified group") { |v| options[:list] = v }
   opts.on("-m", "--markup", "Don't strip DSL markup from output") { options[:markup] = true }
   opts.on("-n", "--no-headers", "Remove headers and footers from results output") { options[:noheaders] = true }
+  opts.on("-p", "--pager-off", "Don't prompt to open results in pager") { options[:pager_off] = true }
   opts.on("-r", "--restrict FILENAME", "Restrict search to the specified dictionary only") { |v| options[:restrict] = v }
 
 end.parse!
@@ -227,7 +228,7 @@ while quitapp != true
   if header_footer == false then results_footer = "" end
   print results_footer
 
-  if interactive_search == true && total != 0
+  if interactive_search == true && total != 0 && options[:pager_off] != true
     puts "Display results in pager? (y/n)"
 
     $stdin.gets.chomp == "y" ? IO.popen("less", "w") { |f| f.puts results } : (puts "Search complete.")

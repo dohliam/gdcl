@@ -170,12 +170,13 @@ There are also a number of settings that can be specified on the fly as command-
 
 * `-c GROUP`, `--names [GROUP]` (_List all dictionaries in specified group by canonical name_)
 * `-d DIRECTORY`, `--dict-directory DIRECTORY` (_Directory in which to look for dictionaries_)
-* `-g`, `--groups (_Print a list of all available dictionary groups_)
+* `-g`, `--groups` (_Print a list of all available dictionary groups_)
 * `-i FILENAMES`, `--ignore FILENAMES` (_List of dictionaries to ignore while searching_)
-* `-l GROUP`, `--list GROUP (_List all dictionaries in specified group by filename_)
-* `-m`, `--markup (_Don't strip DSL markup from output_)
-* `-n`, `--no-headers (_Remove headers and footers from results output_)
-* `-r`, `--restrict FILENAMES (_Don't strip DSL markup from output_)
+* `-l GROUP`, `--list GROUP` (_List all dictionaries in specified group by filename_)
+* `-m`, `--markup` (_Don't strip DSL markup from output_)
+* `-n`, `--no-headers` (_Remove headers and footers from results output_)
+* `-p`, `--pager-off` (_Don't prompt to open results in pager_)
+* `-r`, `--restrict FILENAMES` (_Don't strip DSL markup from output_)
 
 Most of these can be combined, e.g.: `ruby gdcl.rb -nm -d /path/to/dictionaries` to search in `/path/to/dictionaries` and print out results with no headers or footers and without stripping DSL markup.
 
