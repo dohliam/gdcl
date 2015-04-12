@@ -176,7 +176,7 @@ There are also a number of settings that can be specified on the fly as command-
 * `-m`, `--markup` (_Don't strip DSL markup from output_)
 * `-n`, `--no-headers` (_Remove headers and footers from results output_)
 * `-p`, `--pager-off` (_Don't prompt to open results in pager_)
-* `-r`, `--restrict FILENAMES` (_Don't strip DSL markup from output_)
+* `-r`, `--restrict FILENAMES` (_Restrict search to FILENAMES_)
 
 Most of these can be combined, e.g.: `ruby gdcl.rb -nm -d /path/to/dictionaries` to search in `/path/to/dictionaries` and print out results with no headers or footers and without stripping DSL markup.
 
