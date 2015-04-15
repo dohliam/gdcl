@@ -192,22 +192,24 @@ while quitapp != true
       headword = ""
       file.read.each_line do |line|
         if line.match(/^\t/)
-	  line_strip = line.gsub(markup,markup_replace)
+          line = line.gsub(/\\\[(.*?)\\\]/,"%%%\\1%%%")
+          line_strip = line.gsub(markup,markup_replace)
+          line_strip = line_strip.gsub(/%%%(.*?)%%%/,"\[\\1\]")
           if hit > 0
             results << line_strip.gsub("~", headword)
-	    puts line_strip.gsub("~", headword)
-	    hit +=1
+            puts line_strip.gsub("~", headword)
+            hit +=1
           end
         elsif line.match(search_term)
           results << line
-	  puts line
+          puts line
           headword = line.chomp
           hit = 1
-	  counter +=1
-	  total +=1
-# 	  print "\rSearching for #{kword}... A total of #{total} results found so far in [#{group}]"
+          counter +=1
+          total +=1
+#           print "\rSearching for #{kword}... A total of #{total} results found so far in [#{group}]"
         elsif line.encode(universal_newline: true).match(/^$/)
-	  hit = 0
+          hit = 0
         end
       end
     end
