@@ -170,6 +170,9 @@ if kword == ""
   kword = $stdin.gets.chomp
 end
 
+# prevent error if user enters empty search query
+if kword == "" then abort("Invalid search term") end
+
 # keep running the search loop until this is true
 quitapp = false
 
