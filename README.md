@@ -15,13 +15,12 @@ Currently, gdcl does not require an installation of GoldenDict, as it simply sea
   * [2.1.1 Summary](#summary)
   * [2.1.2 Setup and configuration](#setup-and-configuration)
     * [2.1.2.1 gdcl.rb](#gdclrb)
-    * [2.1.2.2 forvo.rb](#forvorb)
-    * [2.1.2.3 gdcg.rb (deprecated)](#gdcgrb-deprecated)
   * [2.1.3 Searching](#searching)
   * [2.1.4 Options](#options)
     * [2.1.4.1 Listing groups and dictionaries](#listing-groups-and-dictionaries)
     * [2.1.4.2 Ignoring and restricting dictionaries](#ignoring-and-restricting-dictionaries)
     * [2.1.4.3 Logging search history](#logging-search-history)
+    * [2.1.4.4 Forvo audio pronunciations](#forvo-audio-pronunciations)
 * [3.1 Supported formats](#supported-formats)
 * [4.1 To do](#to-do)
 * [5.1 License](#license)
@@ -29,7 +28,7 @@ Currently, gdcl does not require an installation of GoldenDict, as it simply sea
 
 ## Installation
 
-To install you can either download the project source and run the scripts directly, or use a package manager to install the appropriate files for your distro. See below for more details and also the section on [setup and configuration](#setup-and-configuration) for how to customize your installation once you've downloaded the source files.
+To install you can either download the project source and run the script directly, or use a package manager to install the appropriate files for your distro. See below for more details and also the section on [setup and configuration](#setup-and-configuration) for how to customize your installation once you've downloaded the source files.
 
 
 ### Installation from Distro Packages
@@ -62,7 +61,7 @@ See below for further configuration and usage details.
 
 ### Setup and configuration
 #### gdcl.rb
-The script for actually searching through the dictionary is called **gdcl.rb**.
+The main script for searching through dictionaries is called **gdcl.rb**.
 
 There are a number of configuration options available in the `config.yml` file. By default, this file should be installed in the standard config folder under the user's home directory (i.e., in the folder `~/.config/gdcl`). If gdcl can't find the file `config.yml` in that folder, it will look for it in $XDG_CONFIG_DIRS (i.e., `/etc/xdg/gdcl`), and failing that, the script folder (i.e., the same directory as the script executable). The `~/.config/gdcl` folder and default `config.yml` file will be created if they do not already exist when you first run gdcl.
 
@@ -91,57 +90,6 @@ Note: You don't need to set up or configure gdcl if you just have one or more di
 
 When prompted to enter a group name, just use `.` again.
 
-#### forvo.rb
-Looking up and playing back audio pronunciations from [Forvo](http://forvo.com/) is supported by gdcl using the `forvo.rb` script and mplayer. This requires registering for a [Forvo API key](http://api.forvo.com/), which is free for non-commercial educational use.
-
-Once you have a key, you just need to copy it into your gdcl config file in your user home directory (i.e. `~/.config/gdcl/config.yml`) under the section "forvo key". Uncomment the line `# :forvo_key: ""` and add your key between the quotation marks `""`. Now you can look up pronunciations by running `forvo.rb`.
-
-Similar to the main dictionary lookup, `forvo.rb` has both interactive and non-interactive modes. If run without any command-line arguments, it will prompt for a [language code](http://www.forvo.com/languages-codes/) and word to pronounce. You can find a full list of the supported codes [here](http://www.forvo.com/languages-codes/).
-
-You can skip the prompts by supplying the language code and word to be pronounced as arguments when running `forvo.rb`, in the form `ruby forvo.rb [lang_code] [word_to_be_pronounced]`. For example, if you wanted to find the pronounciation of the word "сегодня" in Russian, you would enter:
-
-    ruby forvo.rb ru сегодня
-
-The last argument should probably be in quotes to avoid problems -- this also allows for pronunciation of phrases and other terms with spaces:
-
-    ruby forvo.rb sv "Johannes Robert Rydberg"
-
-The script will let you know how many pronunciations were found and print out a numbered list (example below):
-
-* command: `ruby forvo.rb zh 发音`
-
-* output:
-```
-4 pronunciations found for "发音" in zh:
-
-  1. by Gliese (f from China)           0 [+1 -1]
-  2. by witenglish (m from China)       0 [+0 0]
-  3. by cloudrainner (m from China)     0 [+0 0]
-  4. by JuliaWu (f from China)          0 [+0 0]
-
-
-Select a number to hear the corresponding pronunciation, or press "a" to hear all available pronunciations.
-```
-
-To hear any of the listed pronunciations just enter the corresponding number and it will start playing automatically. If you press "a", all of the pronunciations will play in order. The numbers to the far right are the user rating that each pronunciation has received, in the format `rating [+upvotes -downvotes]`.
-
-The Forvo script also has a number of options that can be supplied at the command-line:
-
-* `-m`, `--mp3` (_Use mp3 format instead of ogg_)
-* `-l`, `--list` (_List all pronunciations_)
-* `-u`, `--urls` (_Print a list of audio urls_)
-* `-a`, `--play-all` (_Play back all pronunciations without interaction_)
-* `-s`, `--save` (_Save all audio files to disk_)
-
-Many of these options can be combined, for example:
-
-`ruby forvo.rb -lum en photogrammetry` (_Lookup the word "photogrammetry" and produce a list of pronunciations and urls in mp3 format_)
-
-If you want to skip all interaction entirely and just play each audio result automatically, use the `-a` option and supply the language code and lookup terms on the command-line, e.g.:
-
-    ruby forvo.rb -a fr prononciation
-
-
 ### Searching
 
 By default, invoking gdcl with the command `ruby gdcl.rb` will search interactively. Command prompts will ask you to specify a group of dictionaries to search in out of a list of available groups, and then a keyword to look for. Results will be displayed immediately to standard output.
@@ -167,16 +115,6 @@ To pipe dictionary search results to a file:
 Regular expressions are supported in search terms. Let's say you are looking for the word "test" in a collection of dictionaries. By default gdcl searches for headwords in the dictionary that _begin_ with the search string, but this might give too many results ("testament", "testimony", "testing" etc). To find only words that _strictly match_ the word "test", you could use `test$`.
 
 As another example, searching for `arm.....o` or `arm.*o$` will both find the word "armadillo".
-
-
-#### gdcg.rb (deprecated)
-* __note: this helper script has been phased out since gdcl now reads compressed dictionaries directly from the GoldenDict folder -- the information below is provided for users who may have installed a legacy version of gdcl through their package manager, and will be removed once all distro packages have been updated__
-
-The easiest way to set up dictionaries for use with gdcl is to use the **gdcg.rb** script, which can automatically configure groups of dictionaries for quick searching. By default this looks in the `.goldendict` directory located in the user's home folder, but it can be configured to use any folder containing zipped dsl dictionaries (i.e.: files with the extension .dsl.dz).
-
-If you use gdcg.rb, it assumes that your dictionaries are located in a folder `dic` in your GoldenDict directory, separated into subdirectories representing groups of dictionaries that you would like to search. For example, English dictionaries might be in a subfolder called `en`, French dictionaries in `fr`, and Chemistry dictionaries in a folder `chem`. Using gdcl allows you to search through these groups individually, similar to the way GoldenDict does.
-
-Alternatively, you can just point the gdcl.rb script at any folder containing _unzipped_ dsl files and avoid the need to use gdcg.rb altogether.
 
 ### Options
 
@@ -289,10 +227,32 @@ Note that the search history file only contains a record of your _search terms_,
 
     ruby gdcl.rb mygroup "my search term" > search_results.txt
 
+#### Forvo audio pronunciations
+Looking up and playing back audio pronunciations from [Forvo](http://forvo.com/) is supported by gdcl using the `-f` option and mplayer. This requires registering for a [Forvo API key](http://api.forvo.com/), which is free for non-commercial educational use.
+
+Once you have a key, you just need to copy it into your gdcl config file in your user home directory (i.e. `~/.config/gdcl/config.yml`) under the section "forvo key". Uncomment the line `# :forvo_key: ""` and add your key between the quotation marks `""`. Now you can look up pronunciations by running `gdcl.rb` with the `-f` option.
+
+The basic format for a Forvo audio lookup is:
+
+    ruby gdcl.rb -f [lang_code] [word_to_be_pronounced]
+
+You'll need to supply the 2-letter [ISO 639 language code](http://www.forvo.com/languages-codes/) and a word or phrase to pronounce. You can find a full list of the supported codes [here](http://www.forvo.com/languages-codes/).
+
+For example, if you wanted to find the pronounciation of the word "сегодня" in Russian, you would enter:
+
+    ruby gdcl.rb -f ru сегодня
+
+The last argument should probably be in quotes to avoid problems -- this also allows for pronunciation of phrases and other terms with spaces:
+
+    ruby gdcl.rb -f sv "Johannes Robert Rydberg"
+
+The script will immediately begin playback of all the available pronunciations it found.
+
+Gdcl only supports playback of pronunciation audio. For more full-featured access to the Forvo API, including listing track info and saving pronunciation audio, check out [forvo-cl](https://github.com/dohliam/forvo-cl).
 
 ## Supported formats
 
-gdcl currently supports compressed dictionary files in [ABBYY Lingvo .dsl dictionary format](http://lingvo.helpmax.net/en/troubleshooting/dsl-compiler/your-first-dsl-dictionary/) (i.e., files ending in the extension `.dsl.dz`) as well as online pronunciation audio files from Forvo.com (see [the section above](#forvorb) on using forvo.rb to look up pronunciations). Support for other formats and online dictionaries is planned for future releases.
+gdcl currently supports compressed dictionary files in [ABBYY Lingvo .dsl dictionary format](http://lingvo.helpmax.net/en/troubleshooting/dsl-compiler/your-first-dsl-dictionary/) (i.e., files ending in the extension `.dsl.dz`) as well as online pronunciation audio files from Forvo.com (see [the section above](#forvo-audio-pronunciation) on using gdcl to look up pronunciations). Support for other formats and online dictionaries is planned for future releases.
 
 ## To do
 

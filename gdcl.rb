@@ -14,6 +14,8 @@ require 'yaml'
 require 'fileutils'
 require 'zlib'
 require 'optparse'
+require 'nokogiri'
+require 'open-uri'
 
 config_dir = Dir.home + "/.config/gdcl/"
 xdg = "/etc/xdg/gdcl/"
@@ -45,10 +47,11 @@ OptionParser.new do |opts|
   opts.on("-c", "--names [GROUP]", "List all dictionaries in specified group by canonical name") { |v| v ? options[:dict_name] = v : options[:dict_name] = true }
   opts.on("-C", "--case-off", "Enable case insensitive search") { options[:case_off] = true }
   opts.on("-d", "--dict-directory DIRECTORY", "Directory in which to look for dictionaries") { |v| options[:dict_dir] = v }
-  opts.on("-i", "--ignore FILENAMES", "List of dictionaries to ignore while searching") { |v| options[:ignore] = v }
+  opts.on("-f", "--forvo LANGUAGE", "Play back audio pronunciations from forvo.com") { |v| options[:forvo] = v }
   opts.on("-g", "--groups", "Print a list of all available dictionary groups") { options[:groups] = true }
   opts.on("-h", "--help", "Print this help message") { puts opts; exit }
   opts.on("-H", "--history", "Record search term history in a log file") { options[:history] = true }
+  opts.on("-i", "--ignore FILENAMES", "List of dictionaries to ignore while searching") { |v| options[:ignore] = v }
   opts.on("-l", "--list GROUP", "List all dictionaries in specified group") { |v| options[:list] = v }
   opts.on("-L", "--logfile DIRECTORY", "Directory in which to store search log") { |v| options[:logfile] = v }
   opts.on("-m", "--markup", "Don't strip DSL markup from output") { options[:markup] = true }
@@ -140,6 +143,22 @@ end
 avail_group.sort.each do |dir|
   strip_path = dir.gsub(/.*\//, "")
   print_avail_group << "[#{strip_path}], "
+end
+
+# get forvo pronunciations
+if options[:forvo]
+  key = config[:forvo_key]
+  if key == nil then abort("        Forvo key not set in user config.") end
+  lang = options[:forvo]
+  ARGV[0] ? lookup = ARGV[0] : abort("missing search term")
+  doc = Nokogiri::XML(open(URI.encode("http://apifree.forvo.com/key/#{key}/format/xml/action/word-pronunciations/word/#{lookup}/language/#{lang}")))
+  hits = doc.xpath("//items").first.attribute("total").content.to_i
+  path = doc.xpath("//pathogg")
+  path.each do |link|
+    puts "Playing result #{path.index(link) + 1} of #{hits.to_s} in #{lang} from forvo.com..."
+    `mplayer -really-quiet #{link.content}`
+  end
+  exit
 end
 
 # either run search automatically with provided args, or use interactive mode
