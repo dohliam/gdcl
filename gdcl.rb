@@ -43,6 +43,7 @@ OptionParser.new do |opts|
   opts.banner = "Usage: gdcl.rb [options] [dictionary group] [search term]"
 
   opts.on("-c", "--names [GROUP]", "List all dictionaries in specified group by canonical name") { |v| v ? options[:dict_name] = v : options[:dict_name] = true }
+  opts.on("-C", "--case-off", "Enable case insensitive search") { options[:case_off] = true }
   opts.on("-d", "--dict-directory DIRECTORY", "Directory in which to look for dictionaries") { |v| options[:dict_dir] = v }
   opts.on("-i", "--ignore FILENAMES", "List of dictionaries to ignore while searching") { |v| options[:ignore] = v }
   opts.on("-g", "--groups", "Print a list of all available dictionary groups") { options[:groups] = true }
@@ -63,6 +64,11 @@ if options[:noheaders] == true
   header_footer = false
 else
   header_footer = config[:header_footer]
+end
+if options[:pager_off] == true
+  pager_off = true
+else
+  pager_off = config[:pager_off]
 end
 if options[:dict_dir]
   dict_dir = options[:dict_dir].gsub(/^~/, Dir.home)
@@ -182,7 +188,12 @@ while quitapp != true
   results = ""
   total = 0
 
-  search_term = /^#{kword}/
+# case-sensitive search by default
+  if options[:case_off]
+    search_term = /^#{kword}/i
+  else
+    search_term = /^#{kword}/
+  end
 
   dir.sort.each do |dict|
     dict_name = Zlib::GzipReader.open(dict, :external_encoding => "UTF-16LE").read.each_line.first.strip.sub("\xEF\xBB\xBF", "").gsub(/#NAME\s+"(.*)"/,"\\1")
@@ -233,7 +244,7 @@ while quitapp != true
   if header_footer == false then results_footer = "" end
   print results_footer
 
-  if interactive_search == true && total != 0 && options[:pager_off] != true
+  if interactive_search == true && total != 0 && pager_off != true
     puts "Display results in pager? (y/n)"
 
     $stdin.gets.chomp == "y" ? IO.popen("less", "w") { |f| f.puts results } : (puts "Search complete.")

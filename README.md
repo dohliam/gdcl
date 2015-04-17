@@ -72,6 +72,8 @@ The options available in config.yml are commented and should be self-explanatory
 * `kword`: _Keyword to search for_ (use this to specify a keyword in the script; if not specified here, gdcl will search for a term provided either interactively or on the command line)
 * `interactive_search`: _Interactive search_ (Set to false for non-interactive search, e.g. to pipe or redirect the search results; defaults to false if a group and keyword are specified as command-line parameters)
 * `header_footer`: _Header and footer information_ (Set to false to turn off header and footer information, i.e.: dictionary name and number of hits for search term)
+* `pager_off`: _Don't prompt to open results in pager_ (Set to true to turn off the pager prompt for all searches)
+* `case_off`: _Case insensitive search_ (Set this to true if you want all searches to ignore character case)
 * `temp_dir`: _Temporary working directory_ (The directory where gdcl will store files)
 * `search_term`: _Search pattern_ (Specify a pattern to search for; default is headwords starting with _keyword_, but strict matches or any other regex are also supported)
 * `del_dict`: _Excluded dictionaries_ (Optionally exlude the specified dictionaries from search results)
@@ -169,6 +171,7 @@ Most default options can be configured in the user's config.yml file (see [here]
 There are also a number of settings that can be specified on the fly as command-line options. Use `ruby gdcl.rb -h` to print a list of all available command-line options. Currently, gdcl supports the following options:
 
 * `-c GROUP`, `--names [GROUP]` (_List all dictionaries in specified group by canonical name_)
+* `-C`, `--case-off` (_Enable case insensitive search_)
 * `-d DIRECTORY`, `--dict-directory DIRECTORY` (_Directory in which to look for dictionaries_)
 * `-g`, `--groups` (_Print a list of all available dictionary groups_)
 * `-i FILENAMES`, `--ignore FILENAMES` (_List of dictionaries to ignore while searching_)

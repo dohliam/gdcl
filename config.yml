@@ -36,6 +36,15 @@
 # name, number of hits for search term)
 :header_footer: true
 
+# Don't prompt to open results in pager
+# Set this to true to turn off the pager prompt for all searches
+:pager_off: false
+
+# Enable case insensitive search for all searches
+# Set this to true if you want searches for the word "dog" to return
+# results for "dog", "Dog", and "DOG"
+:case_off: false
+
 # Search pattern (specify a pattern to search for, default is headwords 
 # starting with keyword; include regex between // slashes)
 # :search_term: /^#{kword}/
