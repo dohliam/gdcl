@@ -45,6 +45,13 @@
 # results for "dog", "Dog", and "DOG"
 :case_off: false
 
+# Enable logging of search terms (off by default)
+# :history: true
+
+# Alternate location of search history logfile
+# Default is gdcl config folder, i.e.: ~/.config/gdcl
+# :logfile: "~/example/path"
+
 # Search pattern (specify a pattern to search for, default is headwords 
 # starting with keyword; include regex between // slashes)
 # :search_term: /^#{kword}/

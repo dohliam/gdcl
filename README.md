@@ -21,6 +21,7 @@ Currently, gdcl does not require an installation of GoldenDict, as it simply sea
   * [2.1.4 Options](#options)
     * [2.1.4.1 Listing groups and dictionaries](#listing-groups-and-dictionaries)
     * [2.1.4.2 Ignoring and restricting dictionaries](#ignoring-and-restricting-dictionaries)
+    * [2.1.4.3 Logging search history](#logging-search-history)
 * [3.1 Supported formats](#supported-formats)
 * [4.1 To do](#to-do)
 * [5.1 License](#license)
@@ -67,13 +68,15 @@ There are a number of configuration options available in the `config.yml` file. 
 
 The options available in config.yml are commented and should be self-explanatory. They are listed below for reference:
 
-* `dict_dir`: _Dictionary folder_ (the location of your GoldenDict dictionaries folder; can be any folder, but set to `~/.goldendict/dic` by default)
-* `group`: _Group name_ (a subfolder of the directory specified in `dict_dir` above, containing a group of dictionaries to be searched together; default blank -- if you specify a value here, gdcl will never ask interactively for a group name, and will use the specified group by default)
-* `kword`: _Keyword to search for_ (use this to specify a keyword in the script; if not specified here, gdcl will search for a term provided either interactively or on the command line)
+* `dict_dir`: _Dictionary folder_ (The location of your GoldenDict dictionaries folder; can be any folder, but set to `~/.goldendict/dic` by default)
+* `group`: _Group name_ (A subfolder of the directory specified in `dict_dir` above, containing a group of dictionaries to be searched together; default blank -- if you specify a value here, gdcl will never ask interactively for a group name, and will use the specified group by default)
+* `kword`: _Keyword to search for_ (Use this to specify a keyword in the script; if not specified here, gdcl will search for a term provided either interactively or on the command line)
 * `interactive_search`: _Interactive search_ (Set to false for non-interactive search, e.g. to pipe or redirect the search results; defaults to false if a group and keyword are specified as command-line parameters)
 * `header_footer`: _Header and footer information_ (Set to false to turn off header and footer information, i.e.: dictionary name and number of hits for search term)
 * `pager_off`: _Don't prompt to open results in pager_ (Set to true to turn off the pager prompt for all searches)
 * `case_off`: _Case insensitive search_ (Set this to true if you want all searches to ignore character case)
+* `history`: _Log search history_ (Uncomment this line if you want to log a record of your searches to a text file)
+* `logfile`: _Alternate logfile location_ (A directory where you want to store the history logfile (default is a file called history.txt in the gdcl config folder, i.e.: ~/.config/gdcl))
 * `temp_dir`: _Temporary working directory_ (The directory where gdcl will store files)
 * `search_term`: _Search pattern_ (Specify a pattern to search for; default is headwords starting with _keyword_, but strict matches or any other regex are also supported)
 * `del_dict`: _Excluded dictionaries_ (Optionally exlude the specified dictionaries from search results)
@@ -81,6 +84,12 @@ The options available in config.yml are commented and should be self-explanatory
 * `markup_replace`: _DSL Markup Replacement String_ (Change this if you want to replace dsl markup with some other string)
 
 See also the Options section for more details on how to specify some of these as command-line options.
+
+Note: You don't need to set up or configure gdcl if you just have one or more dictionaries in a single folder that you want to search. You can specify the folder to look in with the `-d` option, or just navigate to the location of the dictionary folder in your terminal and execute gdcl with `-d` using `.` (a single period) to represent the current directory:
+
+    ruby /location/of/gdcl.rb -d .
+
+When prompted to enter a group name, just use `.` again.
 
 #### forvo.rb
 Looking up and playing back audio pronunciations from [Forvo](http://forvo.com/) is supported by gdcl using the `forvo.rb` script and mplayer. This requires registering for a [Forvo API key](http://api.forvo.com/), which is free for non-commercial educational use.
@@ -155,6 +164,11 @@ To pipe dictionary search results to a file:
 
     ruby gdcl.rb en "monkey wrench" > output.txt
 
+Regular expressions are supported in search terms. Let's say you are looking for the word "test" in a collection of dictionaries. By default gdcl searches for headwords in the dictionary that _begin_ with the search string, but this might give too many results ("testament", "testimony", "testing" etc). To find only words that _strictly match_ the word "test", you could use `test$`.
+
+As another example, searching for `arm.....o` or `arm.*o$` will both find the word "armadillo".
+
+
 #### gdcg.rb (deprecated)
 * __note: this helper script has been phased out since gdcl now reads compressed dictionaries directly from the GoldenDict folder -- the information below is provided for users who may have installed a legacy version of gdcl through their package manager, and will be removed once all distro packages have been updated__
 
@@ -174,8 +188,11 @@ There are also a number of settings that can be specified on the fly as command-
 * `-C`, `--case-off` (_Enable case insensitive search_)
 * `-d DIRECTORY`, `--dict-directory DIRECTORY` (_Directory in which to look for dictionaries_)
 * `-g`, `--groups` (_Print a list of all available dictionary groups_)
+* `-h`, `--help` (_Print help message_)
+* `-H`, `--history` (_Record search term history in a log file_)
 * `-i FILENAMES`, `--ignore FILENAMES` (_List of dictionaries to ignore while searching_)
 * `-l GROUP`, `--list GROUP` (_List all dictionaries in specified group by filename_)
+* `-L`, `--logfile DIRECTORY` (_Directory in which to store search log_)
 * `-m`, `--markup` (_Don't strip DSL markup from output_)
 * `-n`, `--no-headers` (_Remove headers and footers from results output_)
 * `-p`, `--pager-off` (_Don't prompt to open results in pager_)
@@ -245,6 +262,32 @@ All dictionaries in the list will be included in the `--ignore` or `--restrict` 
 On the other hand, if you have a _collection_ of dictionaries in group `es` called e.g., `collins_spanish-english.dsl.dz`, `collins_spanish-french.dsl.dz`, `collins_spanish-verbs.dsl.dz`, `collins_french-spanish.dsl.dz`, etc., you could restrict your search to only those dictionaries containing `collins` in the title by using the command:
 
     ruby gdcl.rb -r collins es
+
+#### Logging search history
+
+If logging is enabled (it's off by default), gdcl will save a record of all search terms to a history file, located by default in the gdcl configuration directory (`~/.config/gdcl/history.txt`). This can be useful for, e.g., studying or learning new vocabulary.
+
+There a couple of ways to enable logging of search terms, and you can also specify an alternate directory to save the history file.
+
+If you want gdcl to always record your search terms, you should enable logging in the gdcl config file. Look in `config.yml` for a line containing `# :history: true` and uncomment it to turn logging on for all searches. If you only want to gdcl to record search terms selectively, you can use the `-H` option on the command-line turn logging on for a specific search or set of searches (if you use `-H`, logging will remain in effect until you exit the program).
+
+To specify an alternate directory, uncomment the `# :logfile:` line in `config.yml` and specify a directory of your choice. You can also specify a different directory using `-L` and the directory name when running gdcl. This could be useful for, e.g., recording new vocabulary from different sources in different history files.
+
+For example, let's say you were reading a [Swedish crime novel](https://en.wikipedia.org/wiki/Scandinavian_noir) and you wanted to lookup vocabulary as you read. You could open up an instance of gdcl and send a record of your search terms to a separate file with the following command:
+
+    ruby gdcl.rb -H -L novel_vocab.txt
+
+Later you are watching an interesting [Swedish documentary series](http://www.tv4play.se/tv/tags/Dokument%C3%A4rer) so you open up gdcl to record vocabulary in a new file:
+
+    ruby gdcl.rb -H -L documentary_vocab.txt
+
+Finally, you have to finish your Chinese homework, and you want to look up new words as you go along:
+
+    ruby gdcl.rb -H -L homework_vocab.txt
+
+Note that the search history file only contains a record of your _search terms_, not the actual search results themselves. If you want to save the full text of search results you should use [non-interactive mode](#summary) and pipe the results to a file, e.g.:
+
+    ruby gdcl.rb mygroup "my search term" > search_results.txt
 
 
 ## Supported formats

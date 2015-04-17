@@ -40,14 +40,17 @@ end
 # command-line options
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: gdcl.rb [options] [dictionary group] [search term]"
+  opts.banner = "  gdcl - Command-Line Dictionary Lookup Tool\n\n  Usage: gdcl.rb [options] [dictionary group] [search term]"
 
   opts.on("-c", "--names [GROUP]", "List all dictionaries in specified group by canonical name") { |v| v ? options[:dict_name] = v : options[:dict_name] = true }
   opts.on("-C", "--case-off", "Enable case insensitive search") { options[:case_off] = true }
   opts.on("-d", "--dict-directory DIRECTORY", "Directory in which to look for dictionaries") { |v| options[:dict_dir] = v }
   opts.on("-i", "--ignore FILENAMES", "List of dictionaries to ignore while searching") { |v| options[:ignore] = v }
   opts.on("-g", "--groups", "Print a list of all available dictionary groups") { options[:groups] = true }
+  opts.on("-h", "--help", "Print this help message") { puts opts; exit }
+  opts.on("-H", "--history", "Record search term history in a log file") { options[:history] = true }
   opts.on("-l", "--list GROUP", "List all dictionaries in specified group") { |v| options[:list] = v }
+  opts.on("-L", "--logfile DIRECTORY", "Directory in which to store search log") { |v| options[:logfile] = v }
   opts.on("-m", "--markup", "Don't strip DSL markup from output") { options[:markup] = true }
   opts.on("-n", "--no-headers", "Remove headers and footers from results output") { options[:noheaders] = true }
   opts.on("-p", "--pager-off", "Don't prompt to open results in pager") { options[:pager_off] = true }
@@ -87,6 +90,15 @@ else
   markup = /#{config[:markup]}/
 end
 markup_replace = config[:markup_replace]
+if options[:history] || config[:history]
+  if options[:logfile]
+    log_location = File.join(options[:logfile], "history.txt")
+  elsif config[:logfile]
+    log_location = File.join(config[:logfile].gsub(/^~/, Dir.home), "history.txt")
+  else
+    log_location = File.join(config_dir, "history.txt")
+  end
+end
 
 # list available dictionaries in group
 if options[:list]
@@ -179,6 +191,12 @@ end
 # prevent error if user enters empty search query
 if kword == "" then abort("Invalid search term") end
 
+# log terms
+def log_term(kw, gr, loc)
+  logline = "#{Time.now}\t" + kw + "\t(" + gr + ")\n"
+  logfile = File.open(loc, "a") { |l| l << logline }
+end
+
 # keep running the search loop until this is true
 quitapp = false
 
@@ -188,7 +206,10 @@ while quitapp != true
   results = ""
   total = 0
 
-# case-sensitive search by default
+# if logging is enabled then log search info to file
+if log_location then log_term(kword, group, log_location) end
+
+# case-sensitive search off by default
   if options[:case_off]
     search_term = /^#{kword}/i
   else
@@ -275,5 +296,4 @@ while quitapp != true
   else
     quitapp = true
   end
-
 end
